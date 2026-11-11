@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { ShoppingBag } from 'lucide-react';
 import { useCart } from '@/lib/cart';
+import { urlFor } from '@/sanity/lib/image';
 
 interface ProductItem {
   id: string;
@@ -83,11 +84,47 @@ const HIGHLIGHT_PRODUCTS: ProductItem[] = [
   },
 ];
 
-export function FishSuppliesSection() {
+interface FishSuppliesSectionProps {
+  sanityProducts?: any[];
+}
+
+export function FishSuppliesSection({ sanityProducts }: FishSuppliesSectionProps = {}) {
   const [filter, setFilter] = useState<'all' | 'fish' | 'supplies'>('all');
   const add = useCart((s) => s.add);
 
-  const filtered = HIGHLIGHT_PRODUCTS.filter((item) => {
+  const displayList: ProductItem[] =
+    sanityProducts && sanityProducts.length > 0
+      ? sanityProducts.map((p, idx) => {
+          const fallback = HIGHLIGHT_PRODUCTS[idx % HIGHLIGHT_PRODUCTS.length];
+          let img =
+            fallback?.image ||
+            'https://images.unsplash.com/photo-1520315342629-6ea920342047?q=80&w=600&auto=format&fit=crop';
+          if (p.image) {
+            try {
+              img = typeof p.image === 'string' ? p.image : urlFor(p.image).width(600).url();
+            } catch {}
+          }
+          return {
+            id: p._id || `prod-${idx}`,
+            type: (p._type as 'fish' | 'feed' | 'accessory') || fallback?.type || 'fish',
+            title: p.title || fallback?.title || 'Aquarium Item',
+            slug: p.slug || fallback?.slug || '',
+            price: p.price ?? fallback?.price ?? 100,
+            soldAs: p.soldAs || fallback?.soldAs,
+            image: img,
+            tag:
+              p._type === 'fish'
+                ? `${p.waterType || 'Freshwater'} · ${p.temperament || 'Quarantined'}`
+                : `${p.brand || 'Premium'} · ${p.category || 'Supplies'}`,
+            specs:
+              p._type === 'fish'
+                ? `Adult ${p.adultSizeCm || 10}cm · Acclimated in Ghana`
+                : p.packSize || 'In stock · Ready to ship',
+          };
+        })
+      : HIGHLIGHT_PRODUCTS;
+
+  const filtered = displayList.filter((item) => {
     if (filter === 'all') return true;
     if (filter === 'fish') return item.type === 'fish';
     return item.type === 'feed' || item.type === 'accessory';

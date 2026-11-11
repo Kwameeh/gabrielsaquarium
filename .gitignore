@@ -19,10 +19,14 @@
 
 # production
 /build
+# sanity
+.sanity
+/dist
 
 # misc
 .DS_Store
 *.pem
+*.mp4
 
 # debug
 npm-debug.log*

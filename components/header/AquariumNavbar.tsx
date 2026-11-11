@@ -1,25 +1,63 @@
 'use client';
 
-import React, { useState, useSyncExternalStore } from 'react';
+import React, { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import Link from 'next/link';
-import { Search, ShoppingBag, MessageCircle, Menu, X } from 'lucide-react';
+import Image from 'next/image';
+import { ShoppingBag, MessageCircle, Menu, X } from 'lucide-react';
 import { useCart } from '@/lib/cart';
 import { waLink } from '@/lib/whatsapp';
+import { urlFor } from '@/sanity/lib/image';
 import { motion, AnimatePresence } from 'motion/react';
 
 const emptySubscribe = () => () => {};
 
 interface AquariumNavbarProps {
-  onOpenSearch: () => void;
   whatsappNumber?: string;
+  logo?: any;
+  businessName?: string;
 }
 
 export function AquariumNavbar({
-  onOpenSearch,
-  whatsappNumber = '233241234567',
+  whatsappNumber = '233249384800',
+  logo,
+  businessName = "Gabriel's Aquarium",
 }: AquariumNavbarProps) {
   const { items, openCart } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Smart hide-on-scroll-down, reveal-on-scroll-up
+  const [visible, setVisible] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > 40) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+
+      // Always show near the very top of the page
+      if (currentScrollY < 30) {
+        setVisible(true);
+      } else if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
+        // Scrolling down -> hide navbar
+        setVisible(false);
+        setMobileMenuOpen(false);
+      } else if (currentScrollY < lastScrollY.current) {
+        // Scrolling up -> reveal navbar
+        setVisible(true);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const isMounted = useSyncExternalStore(
     emptySubscribe,
@@ -35,6 +73,7 @@ export function AquariumNavbar({
     { label: 'TANKS', href: '/tanks' },
     { label: 'FISH', href: '/fish' },
     { label: 'SUPPLIES', href: '/supplies' },
+    { label: 'GALLERY', href: '/gallery' },
     { label: 'CUSTOM', href: '/custom-tanks' },
     { label: 'OUR WORK', href: '/our-work' },
     { label: 'MAINTENANCE', href: '/maintenance' },
@@ -45,34 +84,72 @@ export function AquariumNavbar({
     "Hello Gabriel's Aquarium, I'm reaching out from your website."
   );
 
+  let logoUrl: string | null = '/logo.png';
+  if (logo) {
+    try {
+      logoUrl = typeof logo === 'string' ? logo : urlFor(logo).height(80).auto('format').url();
+    } catch {}
+  }
+
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 w-full z-50 flex items-center justify-between px-4 sm:px-8 lg:px-12 py-5 sm:py-6 pointer-events-auto">
-        {/* Left side: Gabriel's Aquarium Logo & Search button */}
+      <header
+        className={`fixed top-0 left-0 right-0 w-full z-50 flex items-center justify-between px-4 sm:px-8 lg:px-12 py-4 sm:py-5 pointer-events-auto transition-all duration-300 ease-in-out ${
+          visible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
+        } ${
+          isScrolled
+            ? 'bg-white/80 backdrop-blur-xl shadow-[0_4px_24px_rgba(3,26,68,0.06)] border-b border-black/[0.04]'
+            : 'bg-transparent'
+        }`}
+      >
+        {/* Left side: Brand Logo / Typography from Sanity Site Settings */}
         <div className="flex items-center">
           <Link
             href="/"
-            className="text-xl sm:text-2xl font-bold tracking-tight text-[#031A44] select-none group flex items-baseline"
-            aria-label="Gabriel's Aquarium Home"
+            className="flex items-center gap-2.5 select-none group focus:outline-none"
+            aria-label={`${businessName} Home`}
           >
-            <span className="font-heading">Gabriel&apos;s</span>
-            <span className="text-[11px] sm:text-xs font-semibold tracking-wider text-[#0762BF] uppercase ml-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
-              Aquarium
-            </span>
+            {logoUrl ? (
+              <div
+                className={`relative h-9 sm:h-11 w-32 sm:w-40 transition-all ${
+                  !isScrolled
+                    ? 'px-2.5 py-1 rounded-xl bg-white/90 backdrop-blur-md shadow-xs border border-white/30'
+                    : ''
+                }`}
+              >
+                <Image
+                  src={logoUrl}
+                  alt={businessName}
+                  fill
+                  sizes="(max-width: 640px) 128px, 160px"
+                  className="object-contain object-left"
+                  priority
+                />
+              </div>
+            ) : (
+              <div
+                className={`flex items-baseline text-xl sm:text-2xl font-bold tracking-tight ${
+                  !isScrolled ? 'text-white drop-shadow-md' : 'text-[#031A44]'
+                }`}
+              >
+                <span className="font-heading">
+                  {businessName.includes("'s") ? (
+                    <>
+                      <span>{businessName.split("'s")[0]}&apos;s</span>
+                      <span className="text-[11px] sm:text-xs font-semibold tracking-wider text-[#0762BF] uppercase ml-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
+                        {businessName.split("'s")[1]?.trim() || 'Aquarium'}
+                      </span>
+                    </>
+                  ) : (
+                    <span>{businessName}</span>
+                  )}
+                </span>
+              </div>
+            )}
           </Link>
-
-          {/* Search icon button 16-24px to the right of logo */}
-          <button
-            type="button"
-            onClick={onOpenSearch}
-            className="ml-4 sm:ml-6 p-2 text-[#031A44]/80 hover:text-[#031A44] hover:scale-105 active:scale-95 transition-all rounded-full bg-white/70 backdrop-blur-sm border border-black/[0.04] shadow-xs focus:outline-none focus-visible:ring-1 focus-visible:ring-[#0762BF]"
-            aria-label="Search aquariums and supplies"
-          >
-            <Search className="w-4 h-4 sm:w-[17px] sm:h-[17px] stroke-[1.8]" />
-          </button>
         </div>
 
-        {/* Right side: Floating white pill & Action buttons */}
+        {/* Right side: Floating Navigation Pill & Quick Action Buttons */}
         <div className="flex items-center gap-3">
           {/* Floating white pill container - desktop */}
           <nav
@@ -138,7 +215,7 @@ export function AquariumNavbar({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="fixed inset-x-4 top-20 z-40 bg-white/98 backdrop-blur-xl rounded-2xl shadow-2xl border border-black/[0.06] p-6 lg:hidden"
+            className="fixed inset-x-4 top-20 z-50 bg-white/98 backdrop-blur-xl rounded-2xl shadow-2xl border border-black/[0.06] p-6 lg:hidden"
           >
             <nav className="flex flex-col gap-3">
               {navLinks.map((item) => (

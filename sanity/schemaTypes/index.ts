@@ -11,6 +11,7 @@ import { maintenancePlan } from './maintenancePlan';
 import { testimonial } from './testimonial';
 import { faq } from './faq';
 import { page } from './page';
+import { gallery } from './gallery';
 
 export const schemaTypes = [
   siteSettings,
@@ -24,6 +25,7 @@ export const schemaTypes = [
   testimonial,
   faq,
   page,
+  gallery,
 ];
 
 export const schema: { types: SchemaTypeDefinition[] } = {

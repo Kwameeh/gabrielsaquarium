@@ -8,7 +8,7 @@ interface FloatingWhatsAppProps {
   number?: string;
 }
 
-export function FloatingWhatsApp({ number = '233241234567' }: FloatingWhatsAppProps) {
+export function FloatingWhatsApp({ number = '233249384800' }: FloatingWhatsAppProps) {
   const url = waLink(number, "Hello Gabriel's Aquarium, I have an inquiry.");
 
   return (

@@ -29,17 +29,20 @@ const PROJECTS_DATA: ProjectDetail[] = [
   {
     slug: 'kasoa-panoramic-curved',
     title: 'Curved Glass Living Room Installation',
-    location: 'Kasoa, Central Region',
+    location: 'East Legon, Accra',
     clientType: 'Private Residence',
     tankSize: '120 x 45 x 65 cm',
     volume: '350 Litres',
     filtration: 'Silent Internal Multi-Chamber Sump',
     glass: '10mm Heat-Bent Curved Front',
     lighting: 'Automated 24/7 Day-Night LED Bar',
-    image: '/images/kasoa-r3.jpg',
-    gallery: ['/images/kasoa-r3.jpg', '/images/kasoa-r4.jpg'],
+    image: '/images/project-04-hotel-lobby-curved-tank-main.jpg',
+    gallery: [
+      '/images/project-04-hotel-lobby-curved-tank-main.jpg',
+      '/images/project-04-hotel-lobby-curved-tank-detail.jpg',
+    ],
     description:
-      'A centerpiece installation custom-built for a modern residential living room in Kasoa. The seamless curved glass corners provide a continuous panoramic viewing angle, eliminating bulky silicone lines on the front face.',
+      'A centerpiece installation custom-built for a modern residential living room in East Legon. The seamless curved glass corners provide a continuous panoramic viewing angle, eliminating bulky silicone lines on the front face.',
     highlights: [
       'Dual-curve seamless front corners eliminating blind spots',
       'Integrated water top-off reservoir to counter evaporation',
@@ -50,15 +53,18 @@ const PROJECTS_DATA: ProjectDetail[] = [
   {
     slug: 'kasoa-inwall-living-reef',
     title: 'Architectural In-Wall Living Reef',
-    location: 'Kasoa Millennium City',
+    location: 'Trassaco Valley, East Legon',
     clientType: 'Executive Villa',
     tankSize: '150 x 50 x 70 cm',
     volume: '525 Litres',
     filtration: 'External Bean-Animal Drain & Sump with Skimmer',
     glass: '12mm Low-Iron Ultra-Clear Starphire Glass',
     lighting: 'App-Controlled High-PAR Actinic Coral Fixtures',
-    image: '/images/kasoa-r4.jpg',
-    gallery: ['/images/kasoa-r4.jpg', '/images/kasoa-r3.jpg'],
+    image: '/images/project-08-marine-reef-at-home-main.jpg',
+    gallery: [
+      '/images/project-08-marine-reef-at-home-main.jpg',
+      '/images/project-08-marine-reef-at-home-detail.jpg',
+    ],
     description:
       'Engineered as an architectural room divider connecting the formal dining room and main lounge. Features an isolated rear filtration chamber for completely silent operation in the living space.',
     highlights: [
@@ -78,8 +84,11 @@ const PROJECTS_DATA: ProjectDetail[] = [
     filtration: 'Canister Filter with In-Line Heater and CO2 Diffuser',
     glass: '10mm Mitered Rimless Low-Iron Glass',
     lighting: 'High-PAR RGB LED Aquascaping Light',
-    image: '/images/kasoa_r5.jpg',
-    gallery: ['/images/kasoa_r5.jpg'],
+    image: '/images/project-01-living-room-feature-tank-main.jpg',
+    gallery: [
+      '/images/project-01-living-room-feature-tank-main.jpg',
+      '/images/project-01-living-room-feature-tank-detail.jpg',
+    ],
     description:
       'An award-worthy Dutch and Iwagumi inspired planted habitat designed for a creative studio in Accra. The ultra-clear rimless glass creates a sense of floating water with vibrant plant growth and schooling nano fish.',
     highlights: [

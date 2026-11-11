@@ -7,29 +7,49 @@ import { ShoppingBag, ArrowRight } from 'lucide-react';
 import { useCart } from '@/lib/cart';
 import { cardMeta } from '@/lib/productMeta';
 import { priceLabel } from '@/lib/whatsapp';
+import { urlFor } from '@/sanity/lib/image';
 import type { Product } from '@/lib/types';
+
+function getProductImageUrl(product: Product): string {
+  if (product.image) {
+    if (typeof product.image === 'string') return product.image;
+    try {
+      return urlFor(product.image).width(800).auto('format').url();
+    } catch {
+      // fallback
+    }
+  }
+  // Curated high quality fallbacks per product category
+  switch (product._type) {
+    case 'tank':
+      return '/images/tank-08-curved-corner-120-front.jpg';
+    case 'fish':
+      return '/images/fish-04-discus.jpg';
+    case 'feed':
+      return 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?q=80&w=800&auto=format&fit=crop';
+    case 'accessory':
+      return 'https://images.unsplash.com/photo-1535591273668-578e31182c4f?q=80&w=800&auto=format&fit=crop';
+    default:
+      return '/images/tank-05-rimless-ultra-clear-100-front.jpg';
+  }
+}
 
 export function ProductCard({ product }: { product: Product }) {
   const add = useCart((s) => s.add);
   const metaParts = cardMeta(product);
   const formattedPrice = priceLabel(product);
+  const imageUrl = getProductImageUrl(product);
 
   return (
     <div className="bg-card rounded-3xl overflow-hidden border border-border shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group">
       <Link href={`/product/${product.slug}`} className="block relative aspect-4/3 w-full bg-slate-900 overflow-hidden">
-        {product.image ? (
-          <Image
-            src={product.image}
-            alt={product.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 33vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground text-xs">
-            No image
-          </div>
-        )}
+        <Image
+          src={imageUrl}
+          alt={product.title}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="object-cover group-hover:scale-105 transition-transform duration-500"
+        />
 
         <div className="absolute top-3 left-3">
           <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#031A44] shadow-xs uppercase tracking-wider">

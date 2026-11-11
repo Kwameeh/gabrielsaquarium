@@ -38,10 +38,10 @@ export const relatedQuery = groq`*[_type == $type && slug.current != $slug][0...
 export const allProductSlugsQuery = groq`*[_type in ${PRODUCTS} && defined(slug.current)]{"slug": slug.current, _updatedAt}`;
 
 export const projectsQuery = groq`*[_type == "project"] | order(_createdAt desc){
-  _id, title, "slug": slug.current, clientType, custom, "image": images[0]
+  _id, title, "slug": slug.current, clientType, custom, tankSize, summary, "image": images[0]
 }`;
 export const featuredProjectsQuery = groq`*[_type == "project" && featured == true][0...6]{
-  _id, title, "slug": slug.current, clientType, "image": images[0]
+  _id, title, "slug": slug.current, clientType, custom, tankSize, summary, "image": images[0]
 }`;
 export const projectQuery = groq`*[_type == "project" && slug.current == $slug][0]`;
 
@@ -50,3 +50,26 @@ export const testimonialsQuery = groq`*[_type == "testimonial"][0...6]`;
 export const faqsQuery = groq`*[_type == "faq"] | order(order asc)`;
 export const homeFaqsQuery = groq`*[_type == "faq" && showOnHome == true] | order(order asc)[0...5]`;
 export const pageQuery = groq`*[_type == "page" && slug.current == $slug][0]`;
+
+// Gallery
+const galleryFields = `
+  _id,
+  title,
+  "slug": slug.current,
+  mediaType,
+  image,
+  videoUrl,
+  "videoFileUrl": videoFile.asset->url,
+  thumbnailImage,
+  tags,
+  description,
+  showOnHome,
+  showInHero,
+  featured,
+  order
+`;
+
+export const galleryQuery = groq`*[_type == "gallery"] | order(order asc){ ${galleryFields} }`;
+export const heroGalleryQuery = groq`*[_type == "gallery" && showInHero == true] | order(order asc){ ${galleryFields} }`;
+export const homeGalleryQuery = groq`*[_type == "gallery" && showOnHome == true] | order(order asc){ ${galleryFields} }`;
+export const galleryByTagQuery = groq`*[_type == "gallery" && $tag in tags] | order(order asc){ ${galleryFields} }`;

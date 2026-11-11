@@ -23,11 +23,11 @@ export const metadata: Metadata = {
     template: "%s | Gabriel's Aquarium",
   },
   description:
-    "Ghana's premier aquarium specialist. Handcrafted curved-glass tanks, custom living reef installations, healthy live fish, premium feeds, and professional aquarium maintenance in Kasoa & Accra.",
+    "Ghana's premier aquarium specialist. Handcrafted curved-glass tanks, custom living reef installations, healthy live fish, premium feeds, and professional aquarium maintenance at American House, East Legon & Greater Accra.",
   keywords: [
     "aquarium Ghana",
     "curved glass fish tanks Accra",
-    "custom aquarium builder Kasoa",
+    "custom aquarium builder East Legon Accra",
     "buy live fish Ghana",
     "discus fish Accra",
     "marine reef tanks Ghana",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     siteName: "Gabriel's Aquarium",
     images: [
       {
-        url: "/images/kasoa-r3.jpg",
+        url: "/images/project-01-living-room-feature-tank-main.jpg",
         width: 1200,
         height: 630,
         alt: "Gabriel's Aquarium - Handcrafted Curved Glass Tanks in Ghana",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     title: "Gabriel's Aquarium — Handcrafted Aquariums & Living Reefs",
     description:
       "Custom curved-glass tanks, vibrant marine reefs, and healthy live fish in Ghana.",
-    images: ["/images/kasoa-r3.jpg"],
+    images: ["/images/project-01-living-room-feature-tank-main.jpg"],
   },
   robots: {
     index: true,

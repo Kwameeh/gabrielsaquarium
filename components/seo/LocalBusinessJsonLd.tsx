@@ -12,15 +12,15 @@ export function LocalBusinessJsonLd() {
     priceRange: 'GHS 85 - GHS 15,000',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Kasoa Workshop & Showroom',
-      addressLocality: 'Kasoa',
-      addressRegion: 'Greater Accra / Central',
+      streetAddress: 'American House',
+      addressLocality: 'East Legon, Accra',
+      addressRegion: 'Greater Accra',
       addressCountry: 'GH',
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 5.5345,
-      longitude: -0.4244,
+      latitude: 5.6366,
+      longitude: -0.1557,
     },
     openingHoursSpecification: [
       {
@@ -39,7 +39,7 @@ export function LocalBusinessJsonLd() {
     ],
     sameAs: [
       'https://instagram.com/gabrielsaquarium',
-      'https://facebook.com/gabrielsaquarium',
+      'https://facebook.com/gabrielsaquarium'
     ],
   };
 

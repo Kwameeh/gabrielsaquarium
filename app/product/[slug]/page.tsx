@@ -10,8 +10,39 @@ import { ProductSpecs } from '@/components/products/ProductSpecs';
 import { ProductActions } from '@/components/products/ProductActions';
 import { ProductCard } from '@/components/products/ProductCard';
 import { priceLabel } from '@/lib/whatsapp';
+import { client } from '@/sanity/lib/client';
+import { productQuery, relatedQuery, allProductSlugsQuery } from '@/lib/queries';
+import { urlFor } from '@/sanity/lib/image';
 import type { Product } from '@/lib/types';
 import { Truck, ShieldCheck, ArrowLeft } from 'lucide-react';
+
+function resolveProductImage(product: Product): string {
+  if (product.image) {
+    if (typeof product.image === 'string') return product.image;
+    try {
+      return urlFor(product.image).width(1200).url();
+    } catch {}
+  }
+  if (product.images && product.images.length > 0) {
+    const first = product.images[0];
+    if (typeof first === 'string') return first;
+    try {
+      return urlFor(first).width(1200).url();
+    } catch {}
+  }
+  switch (product._type) {
+    case 'tank':
+      return '/images/tank-08-curved-corner-120-front.jpg';
+    case 'fish':
+      return '/images/fish-04-discus.jpg';
+    case 'feed':
+      return 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?q=80&w=900&auto=format&fit=crop';
+    case 'accessory':
+      return 'https://images.unsplash.com/photo-1535591273668-578e31182c4f?q=80&w=900&auto=format&fit=crop';
+    default:
+      return '/images/tank-05-rimless-ultra-clear-100-front.jpg';
+  }
+}
 
 const ALL_PRODUCTS: Product[] = [
   // Tanks
@@ -22,8 +53,8 @@ const ALL_PRODUCTS: Product[] = [
     slug: 'curved-glass-panoramic-120',
     price: 3800,
     purchaseType: 'inquire',
-    image: '/images/kasoa-r3.jpg',
-    images: ['/images/kasoa-r3.jpg'],
+    image: '/images/tank-08-curved-corner-120-front.jpg',
+    images: ['/images/tank-08-curved-corner-120-front.jpg', '/images/tank-08-curved-corner-120-angle.jpg'],
     description:
       'Seamless curved front corners give an uninterrupted panoramic underwater vista. Built with 10mm high-transmission glass and German silicone for maximum strength and safety.',
     lengthCm: 120,
@@ -70,8 +101,8 @@ const ALL_PRODUCTS: Product[] = [
     slug: 'marine-reef-system-cabinet-sump-150',
     price: 6500,
     purchaseType: 'inquire',
-    image: '/images/kasoa-r4.jpg',
-    images: ['/images/kasoa-r4.jpg'],
+    image: '/images/tank-11-marine-reef-120-with-sump-front.jpg',
+    images: ['/images/tank-11-marine-reef-120-with-sump-front.jpg', '/images/tank-11-marine-reef-120-with-sump-angle.jpg'],
     description:
       'Turnkey marine ecosystem featuring an ultra-clear 12mm glass display tank, silent internal weir, glass multi-chamber sump filtration, and marine-grade waterproof cabinetry.',
     lengthCm: 150,
@@ -95,8 +126,8 @@ const ALL_PRODUCTS: Product[] = [
     slug: 'aquascaping-nature-tank-90',
     price: 1950,
     purchaseType: 'buy',
-    image: '/images/kasoa_r5.jpg',
-    images: ['/images/kasoa_r5.jpg'],
+    image: '/images/tank-05-rimless-ultra-clear-100-front.jpg',
+    images: ['/images/tank-05-rimless-ultra-clear-100-front.jpg', '/images/tank-05-rimless-ultra-clear-100-angle.jpg'],
     description:
       'Classic 90P dimensions crafted for competitive planted aquascaping. Ultra-clear glass ensures natural truest plant colors and crystal water clarity.',
     lengthCm: 90,
@@ -231,9 +262,16 @@ const ALL_PRODUCTS: Product[] = [
   },
 ];
 
-export function generateStaticParams() {
-  return ALL_PRODUCTS.map((p) => ({
-    slug: p.slug,
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const sanitySlugs = await client.fetch(allProductSlugsQuery).catch(() => []);
+  const allSlugs = new Set([
+    ...ALL_PRODUCTS.map((p) => p.slug),
+    ...(sanitySlugs || []).map((s: any) => s.slug),
+  ]);
+  return Array.from(allSlugs).map((slug) => ({
+    slug,
   }));
 }
 
@@ -243,20 +281,28 @@ export default async function ProductDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = ALL_PRODUCTS.find((p) => p.slug === slug);
+  const sanityProduct = await client.fetch(productQuery, { slug }).catch(() => null);
+  const product = sanityProduct || ALL_PRODUCTS.find((p) => p.slug === slug);
 
   if (!product) {
     notFound();
   }
 
   const formattedPrice = priceLabel(product);
-  const related = ALL_PRODUCTS.filter((p) => p._type === product._type && p.slug !== product.slug).slice(0, 3);
+  const mainImage = resolveProductImage(product);
+  const relatedFromSanity = await client
+    .fetch(relatedQuery, { type: product._type, slug: product.slug })
+    .catch(() => []);
+  const related =
+    relatedFromSanity && relatedFromSanity.length > 0
+      ? relatedFromSanity
+      : ALL_PRODUCTS.filter((p) => p._type === product._type && p.slug !== product.slug).slice(0, 3);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <SiteHeader />
 
-      <main className="flex-1 py-12 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto w-full">
+      <main className="flex-1 pt-24 sm:pt-28 pb-12 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto w-full">
         {/* Breadcrumb */}
         <div className="mb-6">
           <Link
@@ -273,15 +319,13 @@ export default async function ProductDetailPage({
           {/* Left Column: Image Display */}
           <div className="lg:col-span-7">
             <div className="relative aspect-4/3 w-full rounded-3xl overflow-hidden border border-border shadow-md bg-slate-900">
-              {product.image && (
-                <Image
-                  src={product.image}
-                  alt={product.title}
-                  fill
-                  priority
-                  className="object-cover"
-                />
-              )}
+              <Image
+                src={mainImage}
+                alt={product.title}
+                fill
+                priority
+                className="object-cover"
+              />
               <div className="absolute top-4 left-4">
                 <span className="px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-white/95 backdrop-blur-md text-[#031A44] shadow-xs">
                   {product._type}
@@ -349,7 +393,7 @@ export default async function ProductDetailPage({
               You May Also Like
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {related.map((item) => (
+              {related.map((item: Product) => (
                 <ProductCard key={item._id} product={item} />
               ))}
             </div>

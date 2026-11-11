@@ -18,7 +18,7 @@ const TESTIMONIALS = [
   },
   {
     name: 'Kojo Bempong',
-    role: 'Aquarist & Hobbyist, Kasoa',
+    role: 'Aquarist & Hobbyist, East Legon',
     quote:
       'The healthiest discus and African cichlids I have found in Ghana. Gabriel knows his water chemistry and always provides honest advice.',
   },
@@ -31,7 +31,7 @@ const FAQS = [
   },
   {
     q: 'How are live fish safely transported within Ghana?',
-    a: 'Live fish are packed in specialized heavy-duty aquatic bags filled with pure oxygen and temperature-insulating containers. We deliver directly to your doorstep in Greater Accra and Kasoa with a live-arrival health guarantee.',
+    a: 'Live fish are packed in specialized heavy-duty aquatic bags filled with pure oxygen and temperature-insulating containers. We deliver directly to your doorstep in Greater Accra with a live-arrival health guarantee.',
   },
   {
     q: 'Can you build a custom aquarium to match my specific interior?',
@@ -43,12 +43,37 @@ const FAQS = [
   },
   {
     q: 'Where is Gabriel’s Aquarium located?',
-    a: 'Our central showroom and glass workshop are located in Kasoa, Greater Accra Region, with daily delivery and installation teams operating across Accra, Tema, and nationwide.',
+    a: 'Our central showroom and glass workshop are located at American House, East Legon, Accra, with daily delivery and installation teams operating across Greater Accra and nationwide.',
   },
 ];
 
-export function TestimonialsFaq() {
+interface TestimonialsFaqProps {
+  sanityTestimonials?: any[];
+  sanityFaqs?: any[];
+}
+
+export function TestimonialsFaq({
+  sanityTestimonials,
+  sanityFaqs,
+}: TestimonialsFaqProps = {}) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const displayTestimonials =
+    sanityTestimonials && sanityTestimonials.length > 0
+      ? sanityTestimonials.map((t) => ({
+          name: t.name,
+          role: t.role || 'Aquarium Client',
+          quote: t.quote,
+        }))
+      : TESTIMONIALS;
+
+  const displayFaqs =
+    sanityFaqs && sanityFaqs.length > 0
+      ? sanityFaqs.map((f) => ({
+          q: f.question,
+          a: f.answer,
+        }))
+      : FAQS;
 
   return (
     <section className="py-24 px-6 sm:px-10 lg:px-16 bg-muted/20 border-t border-border">
@@ -65,7 +90,7 @@ export function TestimonialsFaq() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {TESTIMONIALS.map((t) => (
+            {displayTestimonials.map((t) => (
               <div
                 key={t.name}
                 className="p-7 rounded-3xl bg-card border border-border shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
@@ -105,7 +130,7 @@ export function TestimonialsFaq() {
           </div>
 
           <div className="space-y-4">
-            {FAQS.map((faq, idx) => {
+            {displayFaqs.map((faq, idx) => {
               const isOpen = openIndex === idx;
               return (
                 <div

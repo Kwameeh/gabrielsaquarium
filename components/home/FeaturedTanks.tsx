@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { ShoppingBag, MessageSquare, Sparkles } from 'lucide-react';
 import { useCart } from '@/lib/cart';
 import { waLink, tankInquiryMessage } from '@/lib/whatsapp';
+import { urlFor } from '@/sanity/lib/image';
+import type { Product } from '@/lib/types';
 
 interface TankItem {
   id: string;
@@ -26,7 +28,7 @@ const FEATURED_TANKS: TankItem[] = [
     slug: 'curved-glass-panoramic-120',
     price: 3800,
     purchaseType: 'inquire',
-    image: '/images/kasoa-r3.jpg',
+    image: '/images/tank-08-curved-corner-120-front.jpg',
     dimensions: '120 x 45 x 65 cm · 350L',
     glass: 'Heat-Bent Curved Front · 10mm Ultra-Clear',
     suitable: 'Freshwater / Marine',
@@ -38,7 +40,7 @@ const FEATURED_TANKS: TankItem[] = [
     slug: 'rimless-low-iron-cube-60',
     price: 1450,
     purchaseType: 'buy',
-    image: 'https://images.unsplash.com/photo-1535591273668-578e31182c4f?q=80&w=800&auto=format&fit=crop',
+    image: '/images/tank-02-starter-tank-60-front.jpg',
     dimensions: '60 x 60 x 60 cm · 216L',
     glass: 'Low-Iron (91% Transmittance) · 8mm Rimless',
     suitable: 'Planted Aquascapes / Shrimp',
@@ -50,7 +52,7 @@ const FEATURED_TANKS: TankItem[] = [
     slug: 'marine-reef-system-cabinet-sump-150',
     price: 6500,
     purchaseType: 'inquire',
-    image: '/images/kasoa-r4.jpg',
+    image: '/images/tank-11-marine-reef-120-with-sump-front.jpg',
     dimensions: '150 x 50 x 65 cm · 480L',
     glass: 'Ultra-Clear 12mm · Silent Weir Overflow',
     suitable: 'Living Coral Reefs / Marine',
@@ -62,7 +64,7 @@ const FEATURED_TANKS: TankItem[] = [
     slug: 'aquascaping-nature-tank-90',
     price: 1950,
     purchaseType: 'buy',
-    image: '/images/kasoa_r5.jpg',
+    image: '/images/tank-05-rimless-ultra-clear-100-front.jpg',
     dimensions: '90 x 45 x 45 cm · 182L',
     glass: 'German High-Strength Silicone · 10mm',
     suitable: 'High-Tech Planted Tanks',
@@ -70,8 +72,50 @@ const FEATURED_TANKS: TankItem[] = [
   },
 ];
 
-export function FeaturedTanks({ whatsappNumber = '233241234567' }: { whatsappNumber?: string }) {
+interface FeaturedTanksProps {
+  whatsappNumber?: string;
+  sanityTanks?: Product[];
+}
+
+export function FeaturedTanks({
+  whatsappNumber = '233249384800',
+  sanityTanks,
+}: FeaturedTanksProps) {
   const add = useCart((s) => s.add);
+
+  const displayTanks: TankItem[] =
+    sanityTanks && sanityTanks.length > 0
+      ? sanityTanks.map((t) => {
+          let img = '/images/tank-08-curved-corner-120-front.jpg';
+          const imgSource = t.image || (t.images && t.images[0]);
+          if (imgSource) {
+            img = typeof imgSource === 'string' ? imgSource : urlFor(imgSource).width(800).url();
+          }
+          const dims =
+            t.lengthCm && t.widthCm && t.heightCm
+              ? `${t.lengthCm} x ${t.widthCm} x ${t.heightCm} cm${t.volumeLitres ? ` · ${t.volumeLitres}L` : ''}`
+              : 'Precision Custom Sized';
+          const glass = `${t.glassType || 'Low-iron glass'}${t.glassThicknessMm ? ` · ${t.glassThicknessMm}mm` : ''}`;
+          const suitable = t.suitableFor
+            ? Array.isArray(t.suitableFor)
+              ? t.suitableFor.join(' / ')
+              : t.suitableFor
+            : 'Freshwater / Marine';
+
+          return {
+            id: t._id,
+            title: t.title,
+            slug: t.slug,
+            price: t.price ?? null,
+            purchaseType: t.purchaseType,
+            image: img,
+            dimensions: dims,
+            glass: glass,
+            suitable: suitable,
+            featuredBadge: t.purchaseType === 'buy' ? 'In Stock · Buy' : 'Signature Piece',
+          };
+        })
+      : FEATURED_TANKS;
 
   const handleInquire = (tank: TankItem) => {
     const text = tankInquiryMessage(
@@ -100,7 +144,7 @@ export function FeaturedTanks({ whatsappNumber = '233241234567' }: { whatsappNum
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {FEATURED_TANKS.map((tank) => (
+          {displayTanks.map((tank) => (
             <div
               key={tank.id}
               className="bg-card rounded-3xl overflow-hidden border border-border shadow-xs hover:shadow-xl transition-all flex flex-col group"

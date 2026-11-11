@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight, MapPin } from 'lucide-react';
+import { urlFor } from '@/sanity/lib/image';
 
 interface ProjectItem {
   id: string;
@@ -17,19 +18,19 @@ const PROJECTS: ProjectItem[] = [
   {
     id: 'kasoa-panoramic-curved',
     title: 'Curved Glass Living Room Installation',
-    location: 'Kasoa, Central Region',
+    location: 'East Legon, Accra',
     clientType: 'Private Residence',
     tankSize: '120 x 45 x 65 cm · 350L',
-    image: '/images/kasoa-r3.jpg',
+    image: '/images/project-04-hotel-lobby-curved-tank-main.jpg',
     description: 'Heat-bent seamless curved corners with automated lighting and silent internal sump filtration.',
   },
   {
     id: 'kasoa-inwall-living-reef',
     title: 'Architectural In-Wall Living Reef',
-    location: 'Kasoa Millennium City',
+    location: 'Trassaco Valley, East Legon',
     clientType: 'Executive Villa',
     tankSize: '150 x 50 x 70 cm · 525L',
-    image: '/images/kasoa-r4.jpg',
+    image: '/images/project-08-marine-reef-at-home-main.jpg',
     description: 'Flush in-wall installation with rear maintenance room, high-output coral lights, and skimmer.',
   },
   {
@@ -38,7 +39,7 @@ const PROJECTS: ProjectItem[] = [
     location: 'Greater Accra',
     clientType: 'Design Studio',
     tankSize: '90 x 45 x 45 cm · 182L',
-    image: '/images/kasoa_r5.jpg',
+    image: '/images/project-01-living-room-feature-tank-main.jpg',
     description: 'Rimless low-iron glass housing hundreds of nano schooling fish amongst lush aquatic flora.',
   },
   {
@@ -47,7 +48,7 @@ const PROJECTS: ProjectItem[] = [
     location: 'Airport Residential, Accra',
     clientType: 'Luxury Apartment',
     tankSize: '180 x 60 x 60 cm · 648L',
-    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop',
+    image: '/images/project-06-corner-tank-in-a-family-lounge-main.jpg',
     description: 'Heavy limestone rockwork providing natural caves for over 40 colorful peacock cichlids.',
   },
   {
@@ -56,7 +57,7 @@ const PROJECTS: ProjectItem[] = [
     location: 'Cantonments, Accra',
     clientType: 'Corporate Headquarters',
     tankSize: '240 x 70 x 80 cm · 1340L',
-    image: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?q=80&w=800&auto=format&fit=crop',
+    image: '/images/project-02-reception-area-display-tank-main.jpg',
     description: 'Turnkey commercial installation with automated water dosing and scheduled bi-weekly care.',
   },
   {
@@ -65,12 +66,39 @@ const PROJECTS: ProjectItem[] = [
     location: 'East Legon, Accra',
     clientType: 'Private Residence',
     tankSize: '160 x 55 x 65 cm · 572L',
-    image: 'https://images.unsplash.com/photo-1520315342629-6ea920342047?q=80&w=800&auto=format&fit=crop',
+    image: '/images/project-07-meeting-room-wall-tank-main.jpg',
     description: 'Manzanita driftwood hardscape with wild-type Heckel and Blue Diamond Discus specimens.',
   },
 ];
 
-export function OurWorkShowcase() {
+interface OurWorkShowcaseProps {
+  sanityProjects?: any[];
+}
+
+export function OurWorkShowcase({ sanityProjects }: OurWorkShowcaseProps = {}) {
+  const displayProjects: ProjectItem[] =
+    sanityProjects && sanityProjects.length > 0
+      ? sanityProjects.map((p, idx) => {
+          const fallback = PROJECTS[idx % PROJECTS.length];
+          let img = fallback?.image || '/images/project-01-living-room-feature-tank-main.jpg';
+          const imgSource = p.image || (p.images && p.images[0]);
+          if (imgSource) {
+            try {
+              img = typeof imgSource === 'string' ? imgSource : urlFor(imgSource).width(800).url();
+            } catch {}
+          }
+          return {
+            id: p.slug || p._id || `proj-${idx}`,
+            title: p.title || fallback?.title || 'Aquarium Project',
+            location: p.location || fallback?.location || 'Accra, Ghana',
+            clientType: p.clientType || fallback?.clientType || 'Custom Project',
+            tankSize: p.tankSize || fallback?.tankSize || 'Custom Size',
+            image: img,
+            description: p.summary || fallback?.description || 'Custom aquarium installation engineered by Gabriel\'s Aquarium.',
+          };
+        })
+      : PROJECTS;
+
   return (
     <section id="our-work" className="py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
@@ -88,7 +116,7 @@ export function OurWorkShowcase() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {PROJECTS.map((proj) => (
+        {displayProjects.map((proj) => (
           <div
             key={proj.id}
             className="group rounded-3xl overflow-hidden border border-border bg-card shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col"

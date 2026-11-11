@@ -17,7 +17,7 @@ export const siteSettings = defineType({
     }),
     defineField({ name: 'phone', type: 'string', initialValue: '+233 24 123 4567' }),
     defineField({ name: 'email', type: 'string', initialValue: 'gabrielsaquarium@gmail.com' }),
-    defineField({ name: 'address', type: 'text', rows: 2, initialValue: 'Kasoa, Greater Accra Region, Ghana' }),
+    defineField({ name: 'address', type: 'text', rows: 2, initialValue: 'American House, East Legon, Accra, Ghana' }),
     defineField({ name: 'mapLink', title: 'Google Maps link', type: 'url' }),
     defineField({
       name: 'openingHours',

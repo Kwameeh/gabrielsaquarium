@@ -46,7 +46,7 @@ export function MaintenanceSection({ whatsappNumber = '233241234567' }: { whatsa
     const text = maintenanceMessage({
       name: 'Website Visitor',
       phone: 'Via WhatsApp',
-      location: 'Accra / Kasoa',
+      location: 'East Legon / Greater Accra',
       tanks: '1 tank',
       plan: planName,
     });

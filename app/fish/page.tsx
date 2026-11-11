@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SiteHeader } from '@/components/header/SiteHeader';
 import { Footer } from '@/components/home/Footer';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
 import { ProductCard } from '@/components/products/ProductCard';
+import { client } from '@/sanity/lib/client';
+import { fishQuery } from '@/lib/queries';
 import type { Product } from '@/lib/types';
 import { ShieldCheck } from 'lucide-react';
 
@@ -18,7 +20,8 @@ const SAMPLE_FISH: Product[] = [
     price: 320,
     purchaseType: 'buy',
     soldAs: 'each',
-    image: 'https://images.unsplash.com/photo-1520315342629-6ea920342047?q=80&w=800&auto=format&fit=crop',
+    image: '/images/fish-04-discus.jpg',
+    images: ['/images/fish-04-discus.jpg'],
     waterType: 'Freshwater',
     careLevel: 'Moderate',
     temperament: 'Peaceful',
@@ -37,7 +40,8 @@ const SAMPLE_FISH: Product[] = [
     price: 450,
     purchaseType: 'buy',
     soldAs: 'per pair',
-    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop',
+    image: '/images/fish-13-ocellaris-clownfish.jpg',
+    images: ['/images/fish-13-ocellaris-clownfish.jpg'],
     waterType: 'Marine',
     careLevel: 'Easy',
     temperament: 'Peaceful',
@@ -57,7 +61,8 @@ const SAMPLE_FISH: Product[] = [
     price: 85,
     purchaseType: 'buy',
     soldAs: 'each',
-    image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop',
+    image: '/images/fish-10-convict-cichlid.jpg',
+    images: ['/images/fish-10-convict-cichlid.jpg'],
     waterType: 'Freshwater',
     careLevel: 'Easy',
     temperament: 'Semi-aggressive',
@@ -76,7 +81,8 @@ const SAMPLE_FISH: Product[] = [
     price: 680,
     purchaseType: 'buy',
     soldAs: 'each',
-    image: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=800&auto=format&fit=crop',
+    image: '/images/fish-14-royal-gramma.jpg',
+    images: ['/images/fish-14-royal-gramma.jpg'],
     waterType: 'Marine',
     careLevel: 'Moderate',
     temperament: 'Semi-aggressive',
@@ -96,7 +102,8 @@ const SAMPLE_FISH: Product[] = [
     price: 90,
     purchaseType: 'buy',
     soldAs: 'group of 6',
-    image: 'https://images.unsplash.com/photo-1576836165612-8bc9b07e7778?q=80&w=800&auto=format&fit=crop',
+    image: '/images/fish-05-neon-tetra.jpg',
+    images: ['/images/fish-05-neon-tetra.jpg'],
     waterType: 'Freshwater',
     careLevel: 'Easy',
     temperament: 'Peaceful',
@@ -110,12 +117,13 @@ const SAMPLE_FISH: Product[] = [
   {
     _id: 'fish-yellow-tang',
     _type: 'fish',
-    title: 'Hawaiian Yellow Tang (Zebrasoma flavescens)',
-    slug: 'hawaiian-yellow-tang',
-    price: 1200,
+    title: 'Royal Blue Halfmoon Betta Specimen',
+    slug: 'royal-blue-halfmoon-betta',
+    price: 120,
     purchaseType: 'buy',
     soldAs: 'each',
-    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop',
+    image: '/images/fish-02-betta.jpg',
+    images: ['/images/fish-02-betta.jpg'],
     waterType: 'Marine',
     careLevel: 'Moderate',
     temperament: 'Semi-aggressive',
@@ -130,9 +138,21 @@ const SAMPLE_FISH: Product[] = [
 ];
 
 export default function FishPage() {
+  const [fishList, setFishList] = useState<Product[]>(SAMPLE_FISH);
   const [filter, setFilter] = useState<'all' | 'freshwater' | 'marine' | 'easy'>('all');
 
-  const filteredFish = SAMPLE_FISH.filter((f) => {
+  useEffect(() => {
+    client
+      .fetch(fishQuery)
+      .then((data) => {
+        if (data && data.length > 0) {
+          setFishList(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const filteredFish = fishList.filter((f) => {
     if (filter === 'all') return true;
     if (filter === 'freshwater') return f.waterType === 'Freshwater';
     if (filter === 'marine') return f.waterType === 'Marine';
@@ -144,7 +164,7 @@ export default function FishPage() {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <SiteHeader />
 
-      <main className="flex-1 py-12 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto w-full">
+      <main className="flex-1 pt-24 sm:pt-28 pb-12 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto w-full">
         {/* Page Title */}
         <div className="mb-8">
           <span className="text-xs font-bold tracking-widest uppercase text-primary">

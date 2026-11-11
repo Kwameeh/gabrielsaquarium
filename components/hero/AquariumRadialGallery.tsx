@@ -8,7 +8,11 @@ import { BlueprintGraphic, PastelFurnitureGraphic } from './CardVisuals';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-export function AquariumRadialGallery() {
+interface AquariumRadialGalleryProps {
+  items?: GalleryItemData[];
+}
+
+export function AquariumRadialGallery({ items = AQUARIUM_GALLERY_ITEMS }: AquariumRadialGalleryProps = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -81,7 +85,7 @@ export function AquariumRadialGallery() {
       const { width, height } = dimensions.current;
       const baseMaxRadius = Math.max(width, height) * 0.68;
 
-      AQUARIUM_GALLERY_ITEMS.forEach((item, index) => {
+      items.forEach((item, index) => {
         const el = itemsRef.current[index];
         if (!el) return;
 
@@ -141,7 +145,7 @@ export function AquariumRadialGallery() {
       >
         {/* Origin container pinned at center (50% 50%) */}
         <div className="absolute top-1/2 left-1/2 w-0 h-0">
-          {AQUARIUM_GALLERY_ITEMS.map((item, index) => (
+          {items.map((item, index) => (
             <div
               key={item.id}
               ref={(el) => {
@@ -254,7 +258,19 @@ export function AquariumRadialGallery() {
               onClick={(e) => e.stopPropagation()}
               className="relative w-full max-w-lg bg-white rounded-3xl overflow-hidden shadow-2xl border border-border"
             >
-              {activeItem.imageUrl && (
+              {activeItem.type === 'video' && activeItem.videoUrl ? (
+                <div className="relative w-full h-72 bg-black">
+                  <video
+                    src={activeItem.videoUrl}
+                    poster={activeItem.imageUrl}
+                    autoPlay
+                    loop
+                    playsInline
+                    controls
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : activeItem.imageUrl ? (
                 <div className="relative w-full h-64 bg-slate-900">
                   <Image
                     src={activeItem.imageUrl}
@@ -264,7 +280,7 @@ export function AquariumRadialGallery() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
-              )}
+              ) : null}
 
               <div className="p-6">
                 <span className="text-[10px] tracking-widest font-mono uppercase text-[#0762BF] font-semibold">

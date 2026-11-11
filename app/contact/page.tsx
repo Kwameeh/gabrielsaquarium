@@ -54,7 +54,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-foreground">Showroom &amp; Workshop</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">Kasoa, Greater Accra Region, Ghana</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">American House, East Legon, Accra, Ghana</p>
                 </div>
               </div>
 

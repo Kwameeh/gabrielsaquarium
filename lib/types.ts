@@ -58,3 +58,22 @@ export type Product = {
   specs?: { label: string; value: string }[];
   whatsIncluded?: string[];
 };
+
+export interface SanityGalleryItem {
+  _id: string;
+  _type: 'gallery';
+  title: string;
+  slug?: { current: string };
+  mediaType: 'image' | 'video';
+  image?: any;
+  imageUrl?: string;
+  videoUrl?: string;
+  videoFile?: any;
+  thumbnailImage?: any;
+  tags?: string[];
+  description?: string;
+  showOnHome?: boolean;
+  showInHero?: boolean;
+  featured?: boolean;
+  order?: number;
+}

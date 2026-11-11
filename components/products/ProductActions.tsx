@@ -8,7 +8,7 @@ import type { Product } from '@/lib/types';
 
 export function ProductActions({
   product,
-  whatsappNumber = '233241234567',
+  whatsappNumber = '233249384800',
 }: {
   product: Product;
   whatsappNumber?: string;

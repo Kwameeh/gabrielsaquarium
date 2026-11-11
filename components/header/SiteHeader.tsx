@@ -1,17 +1,60 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Search, ShoppingBag, MessageCircle, Menu, X } from 'lucide-react';
+import Image from 'next/image';
+import { ShoppingBag, MessageCircle, Menu, X } from 'lucide-react';
 import { useCart } from '@/lib/cart';
 import { waLink } from '@/lib/whatsapp';
-import { AquariumSearchModal } from './AquariumSearchModal';
+import { urlFor } from '@/sanity/lib/image';
 import { motion, AnimatePresence } from 'motion/react';
 
-export function SiteHeader({ whatsappNumber = '233241234567' }: { whatsappNumber?: string }) {
+interface SiteHeaderProps {
+  whatsappNumber?: string;
+  logo?: any;
+  businessName?: string;
+}
+
+export function SiteHeader({
+  whatsappNumber = '233249384800',
+  logo,
+  businessName = "Gabriel's Aquarium",
+}: SiteHeaderProps) {
   const { items, openCart } = useCart();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Smart hide-on-scroll-down, reveal-on-scroll-up
+  const [visible, setVisible] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > 40) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+
+      if (currentScrollY < 30) {
+        setVisible(true);
+      } else if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
+        // Scrolling down -> hide header
+        setVisible(false);
+        setMobileMenuOpen(false);
+      } else if (currentScrollY < lastScrollY.current) {
+        // Scrolling up -> show header
+        setVisible(true);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const totalItems = items.reduce((sum, item) => sum + item.qty, 0);
 
@@ -19,6 +62,7 @@ export function SiteHeader({ whatsappNumber = '233241234567' }: { whatsappNumber
     { label: 'TANKS', href: '/tanks' },
     { label: 'FISH', href: '/fish' },
     { label: 'SUPPLIES', href: '/supplies' },
+    { label: 'GALLERY', href: '/gallery' },
     { label: 'CUSTOM', href: '/custom-tanks' },
     { label: 'OUR WORK', href: '/our-work' },
     { label: 'MAINTENANCE', href: '/maintenance' },
@@ -26,39 +70,65 @@ export function SiteHeader({ whatsappNumber = '233241234567' }: { whatsappNumber
 
   const whatsappUrl = waLink(whatsappNumber, "Hello Gabriel's Aquarium, I'm reaching out from your website.");
 
+  let logoUrl: string | null = '/logo.png';
+  if (logo) {
+    try {
+      logoUrl = typeof logo === 'string' ? logo : urlFor(logo).height(80).auto('format').url();
+    } catch {}
+  }
+
   return (
     <>
-      <header className="sticky top-0 w-full z-40 bg-background/80 backdrop-blur-md border-b border-border/40 py-4 px-4 sm:px-8 lg:px-12 flex items-center justify-between">
-        {/* Brand logo & Search trigger */}
+      <header
+        className={`fixed top-0 left-0 right-0 w-full z-40 bg-background/85 backdrop-blur-xl border-b border-border/50 py-3.5 sm:py-4 px-4 sm:px-8 lg:px-12 flex items-center justify-between transition-all duration-300 ease-in-out ${
+          visible ? 'translate-y-0 opacity-100 shadow-xs' : '-translate-y-full opacity-0'
+        }`}
+      >
+        {/* Brand logo / Typography from Sanity */}
         <div className="flex items-center">
           <Link
             href="/"
-            className="text-xl sm:text-2xl font-bold tracking-tight text-[#031A44] select-none group flex items-baseline"
+            className="flex items-center gap-2 select-none group focus:outline-none"
+            aria-label={`${businessName} Home`}
           >
-            <span className="font-heading">Gabriel&apos;s</span>
-            <span className="text-[11px] sm:text-xs font-semibold tracking-wider text-[#0762BF] uppercase ml-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
-              Aquarium
-            </span>
+            {logoUrl ? (
+              <div className="relative h-9 sm:h-10 w-32 sm:w-36">
+                <Image
+                  src={logoUrl}
+                  alt={businessName}
+                  fill
+                  sizes="(max-width: 640px) 128px, 144px"
+                  className="object-contain object-left"
+                  priority
+                />
+              </div>
+            ) : (
+              <div className="flex items-baseline text-xl sm:text-2xl font-bold tracking-tight text-[#031A44]">
+                <span className="font-heading">
+                  {businessName.includes("'s") ? (
+                    <>
+                      <span>{businessName.split("'s")[0]}&apos;s</span>
+                      <span className="text-[11px] sm:text-xs font-semibold tracking-wider text-[#0762BF] uppercase ml-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
+                        {businessName.split("'s")[1]?.trim() || 'Aquarium'}
+                      </span>
+                    </>
+                  ) : (
+                    <span>{businessName}</span>
+                  )}
+                </span>
+              </div>
+            )}
           </Link>
-
-          <button
-            type="button"
-            onClick={() => setIsSearchOpen(true)}
-            className="ml-4 sm:ml-6 p-2 text-[#031A44]/80 hover:text-[#031A44] hover:scale-105 active:scale-95 transition-all rounded-full bg-secondary border border-border focus:outline-none"
-            aria-label="Search site"
-          >
-            <Search className="w-4 h-4 stroke-[1.8]" />
-          </button>
         </div>
 
         {/* Floating pill navigation */}
         <div className="flex items-center gap-3">
-          <nav className="hidden lg:flex bg-white/95 backdrop-blur-md rounded-full px-6 py-2 shadow-xs border border-border items-center gap-5 xl:gap-6">
+          <nav className="hidden lg:flex bg-card/90 backdrop-blur-md rounded-full px-6 py-2 shadow-xs border border-border items-center gap-5 xl:gap-6">
             {navLinks.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="text-[11px] tracking-[0.08em] font-medium text-[#031A44] hover:text-[#0762BF] transition-colors uppercase whitespace-nowrap"
+                className="text-[11px] tracking-[0.08em] font-medium text-foreground hover:text-primary transition-colors uppercase whitespace-nowrap"
               >
                 {item.label}
               </Link>
@@ -69,15 +139,15 @@ export function SiteHeader({ whatsappNumber = '233241234567' }: { whatsappNumber
           <button
             type="button"
             onClick={openCart}
-            className="relative flex items-center gap-2 bg-white/95 backdrop-blur-md hover:bg-white text-[#031A44] px-3.5 py-2 rounded-full border border-border shadow-xs hover:shadow-md transition-all active:scale-95"
+            className="relative flex items-center gap-2 bg-card/90 backdrop-blur-md hover:bg-card text-foreground px-3.5 py-2 rounded-full border border-border shadow-xs hover:shadow-md transition-all active:scale-95"
             aria-label={`Open shopping cart with ${totalItems} items`}
           >
-            <ShoppingBag className="w-4 h-4 text-[#0762BF]" />
+            <ShoppingBag className="w-4 h-4 text-primary" />
             <span className="hidden sm:inline-block text-[11px] font-semibold tracking-wide">
               Cart
             </span>
             {totalItems > 0 && (
-              <span className="w-5 h-5 rounded-full bg-[#0762BF] text-white text-[10px] font-bold flex items-center justify-center animate-pulse">
+              <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center animate-pulse">
                 {totalItems}
               </span>
             )}
@@ -98,7 +168,7 @@ export function SiteHeader({ whatsappNumber = '233241234567' }: { whatsappNumber
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-full bg-white text-[#031A44] border border-border shadow-xs"
+            className="lg:hidden p-2 rounded-full bg-card text-foreground border border-border shadow-xs"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -113,7 +183,7 @@ export function SiteHeader({ whatsappNumber = '233241234567' }: { whatsappNumber
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="fixed inset-x-4 top-20 z-40 bg-white rounded-2xl shadow-2xl border border-border p-6 lg:hidden"
+            className="fixed inset-x-4 top-20 z-50 bg-card rounded-2xl shadow-2xl border border-border p-6 lg:hidden"
           >
             <nav className="flex flex-col gap-3">
               {navLinks.map((item) => (
@@ -121,7 +191,7 @@ export function SiteHeader({ whatsappNumber = '233241234567' }: { whatsappNumber
                   key={item.label}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-xs font-semibold tracking-wider text-[#031A44] hover:text-[#0762BF] py-2 border-b border-border/40 flex items-center justify-between"
+                  className="text-xs font-semibold tracking-wider text-foreground hover:text-primary py-2 border-b border-border/40 flex items-center justify-between"
                 >
                   <span>{item.label}</span>
                   <span className="text-muted-foreground text-xs">→</span>
@@ -141,11 +211,6 @@ export function SiteHeader({ whatsappNumber = '233241234567' }: { whatsappNumber
           </motion.div>
         )}
       </AnimatePresence>
-
-      <AquariumSearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-      />
     </>
   );
 }

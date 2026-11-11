@@ -72,7 +72,7 @@ export function CustomBuildTeaser({ whatsappNumber = '233241234567' }: { whatsap
             {/* Image Preview of Past Kasoa Build */}
             <div className="relative h-64 rounded-3xl overflow-hidden border border-border/40">
               <Image
-                src="/images/kasoa-r4.jpg"
+                src="/images/project-08-marine-reef-at-home-main.jpg"
                 alt="Custom In-Wall Aquarium Installation in Kasoa"
                 fill
                 className="object-cover"

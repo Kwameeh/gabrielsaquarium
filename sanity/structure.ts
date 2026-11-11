@@ -18,7 +18,8 @@ export const structure: StructureResolver = (S) =>
             .items(productTypes.map((type) => S.documentTypeListItem(type)))
         ),
       S.divider(),
+      S.documentTypeListItem('gallery').title('Gallery'),
       ...S.documentTypeListItems().filter(
-        (item) => !['siteSettings', ...productTypes].includes(item.getId() ?? '')
+        (item) => !['siteSettings', 'gallery', ...productTypes].includes(item.getId() ?? '')
       ),
     ]);

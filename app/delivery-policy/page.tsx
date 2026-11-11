@@ -18,7 +18,7 @@ export default function DeliveryPolicyPage() {
           <section className="space-y-2">
             <h2 className="text-base font-bold text-foreground">1. Glass Tank Delivery &amp; Handling</h2>
             <p>
-              Due to the delicate nature and weight of glass aquariums, all tanks are transported using dedicated vehicles with protective shock-absorption blankets. Delivery fees in Greater Accra and Kasoa are calculated based on distance and whether staircase carrying or crane placement is required.
+              Due to the delicate nature and weight of glass aquariums, all tanks are transported using dedicated vehicles with protective shock-absorption blankets. Delivery fees across Greater Accra are calculated based on distance and whether staircase carrying or crane placement is required.
             </p>
           </section>
 
@@ -33,9 +33,9 @@ export default function DeliveryPolicyPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-base font-bold text-foreground">3. Shop Pickup in Kasoa</h2>
+            <h2 className="text-base font-bold text-foreground">3. Shop Pickup at American House</h2>
             <p>
-              Customers choosing &ldquo;Pickup&rdquo; can collect their items from our Kasoa workshop. Our staff will assist with careful packaging and vehicle loading.
+              Customers choosing &ldquo;Pickup&rdquo; can collect their items from our American House, East Legon showroom &amp; workshop. Our staff will assist with careful packaging and vehicle loading.
             </p>
           </section>
         </div>

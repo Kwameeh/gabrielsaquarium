@@ -9,7 +9,7 @@ export function CategoryTiles() {
       subtitle: 'Curved front, rimless & cube glass aquariums',
       href: '#tanks',
       badge: 'Popular',
-      image: '/images/kasoa-r3.jpg',
+      image: '/images/tank-08-curved-corner-120-front.jpg',
       colSpan: 'sm:col-span-2 lg:col-span-2',
     },
     {
@@ -17,7 +17,7 @@ export function CategoryTiles() {
       subtitle: 'Bespoke living walls, room dividers & cabinetry',
       href: '#custom',
       badge: 'Bespoke',
-      image: '/images/kasoa-r4.jpg',
+      image: '/images/project-03-restaurant-divider-aquarium-main.jpg',
       colSpan: 'sm:col-span-1 lg:col-span-1',
     },
     {
@@ -25,7 +25,7 @@ export function CategoryTiles() {
       subtitle: 'Acclimated freshwater cichlids, discus & marine species',
       href: '#fish',
       badge: 'Quarantined',
-      image: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=800&auto=format&fit=crop',
+      image: '/images/fish-04-discus.jpg',
       colSpan: 'sm:col-span-1 lg:col-span-1',
     },
     {
@@ -33,7 +33,7 @@ export function CategoryTiles() {
       subtitle: 'Hikari feeds, filtration, LED lighting & substrate',
       href: '#supplies',
       badge: 'Premium',
-      image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop',
+      image: '/images/tank-05-rimless-ultra-clear-100-front.jpg',
       colSpan: 'sm:col-span-1 lg:col-span-1',
     },
     {
@@ -41,7 +41,7 @@ export function CategoryTiles() {
       subtitle: 'Scheduled cleaning, filter servicing & water testing',
       href: '#maintenance',
       badge: 'Scheduled',
-      image: '/images/kasoa_r5.jpg',
+      image: '/images/project-01-living-room-feature-tank-main.jpg',
       colSpan: 'sm:col-span-2 lg:col-span-1',
     },
   ];

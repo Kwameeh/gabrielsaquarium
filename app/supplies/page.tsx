@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SiteHeader } from '@/components/header/SiteHeader';
 import { Footer } from '@/components/home/Footer';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
 import { ProductCard } from '@/components/products/ProductCard';
+import { client } from '@/sanity/lib/client';
+import { suppliesQuery } from '@/lib/queries';
 import type { Product } from '@/lib/types';
 
 const SAMPLE_SUPPLIES: Product[] = [
@@ -95,9 +97,21 @@ const SAMPLE_SUPPLIES: Product[] = [
 ];
 
 export default function SuppliesPage() {
+  const [suppliesList, setSuppliesList] = useState<Product[]>(SAMPLE_SUPPLIES);
   const [filter, setFilter] = useState<'all' | 'feed' | 'filtration' | 'lighting' | 'care'>('all');
 
-  const filteredSupplies = SAMPLE_SUPPLIES.filter((item) => {
+  useEffect(() => {
+    client
+      .fetch(suppliesQuery)
+      .then((data) => {
+        if (data && data.length > 0) {
+          setSuppliesList(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const filteredSupplies = suppliesList.filter((item) => {
     if (filter === 'all') return true;
     if (filter === 'feed') return item._type === 'feed';
     if (filter === 'filtration') return item.category === 'Filtration';
@@ -110,7 +124,7 @@ export default function SuppliesPage() {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <SiteHeader />
 
-      <main className="flex-1 py-12 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto w-full">
+      <main className="flex-1 pt-24 sm:pt-28 pb-12 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto w-full">
         {/* Page Title */}
         <div className="mb-8">
           <span className="text-xs font-bold tracking-widest uppercase text-primary">

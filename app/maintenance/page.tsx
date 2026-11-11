@@ -45,7 +45,7 @@ export default function MaintenancePage() {
               Professional Aquarium Maintenance
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground mt-4 leading-relaxed">
-              We provide scheduled routine care and emergency servicing for residential and commercial aquariums in Accra, Kasoa, and surrounding areas. Enjoy the tranquility of a flourishing aquarium while we handle the work.
+              We provide scheduled routine care and emergency servicing for residential and commercial aquariums across Greater Accra and surrounding areas. Enjoy the tranquility of a flourishing aquarium while we handle the work.
             </p>
           </div>
 

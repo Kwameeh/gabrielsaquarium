@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SiteHeader } from '@/components/header/SiteHeader';
 import { Footer } from '@/components/home/Footer';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
 import { ProductCard } from '@/components/products/ProductCard';
+import { client } from '@/sanity/lib/client';
+import { tanksQuery } from '@/lib/queries';
 import type { Product } from '@/lib/types';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -18,7 +20,8 @@ const SAMPLE_TANKS: Product[] = [
     slug: 'curved-glass-panoramic-120',
     price: 3800,
     purchaseType: 'inquire',
-    image: '/images/kasoa-r3.jpg',
+    image: '/images/tank-08-curved-corner-120-front.jpg',
+    images: ['/images/tank-08-curved-corner-120-front.jpg', '/images/tank-08-curved-corner-120-angle.jpg'],
     lengthCm: 120,
     widthCm: 45,
     heightCm: 65,
@@ -39,7 +42,8 @@ const SAMPLE_TANKS: Product[] = [
     slug: 'rimless-low-iron-cube-60',
     price: 1450,
     purchaseType: 'buy',
-    image: 'https://images.unsplash.com/photo-1535591273668-578e31182c4f?q=80&w=800&auto=format&fit=crop',
+    image: '/images/tank-02-starter-tank-60-front.jpg',
+    images: ['/images/tank-02-starter-tank-60-front.jpg', '/images/tank-02-starter-tank-60-angle.jpg'],
     lengthCm: 60,
     widthCm: 60,
     heightCm: 60,
@@ -60,7 +64,8 @@ const SAMPLE_TANKS: Product[] = [
     slug: 'marine-reef-system-cabinet-sump-150',
     price: 6500,
     purchaseType: 'inquire',
-    image: '/images/kasoa-r4.jpg',
+    image: '/images/tank-11-marine-reef-120-with-sump-front.jpg',
+    images: ['/images/tank-11-marine-reef-120-with-sump-front.jpg', '/images/tank-11-marine-reef-120-with-sump-angle.jpg'],
     lengthCm: 150,
     widthCm: 50,
     heightCm: 65,
@@ -82,7 +87,8 @@ const SAMPLE_TANKS: Product[] = [
     slug: 'aquascaping-nature-tank-90',
     price: 1950,
     purchaseType: 'buy',
-    image: '/images/kasoa_r5.jpg',
+    image: '/images/tank-05-rimless-ultra-clear-100-front.jpg',
+    images: ['/images/tank-05-rimless-ultra-clear-100-front.jpg', '/images/tank-05-rimless-ultra-clear-100-angle.jpg'],
     lengthCm: 90,
     widthCm: 45,
     heightCm: 45,
@@ -103,7 +109,8 @@ const SAMPLE_TANKS: Product[] = [
     slug: 'seamless-curved-corner-desktop-100',
     price: 2400,
     purchaseType: 'buy',
-    image: '/images/kasoa-r3.jpg',
+    image: '/images/tank-06-bow-front-curved-100-front.jpg',
+    images: ['/images/tank-06-bow-front-curved-100-front.jpg', '/images/tank-06-bow-front-curved-100-angle.jpg'],
     lengthCm: 100,
     widthCm: 40,
     heightCm: 50,
@@ -123,7 +130,8 @@ const SAMPLE_TANKS: Product[] = [
     slug: 'panoramic-in-wall-room-divider-200',
     price: 9500,
     purchaseType: 'inquire',
-    image: '/images/kasoa-r4.jpg',
+    image: '/images/tank-12-panoramic-wall-feature-200-front.jpg',
+    images: ['/images/tank-12-panoramic-wall-feature-200-front.jpg', '/images/tank-12-panoramic-wall-feature-200-angle.jpg'],
     lengthCm: 200,
     widthCm: 60,
     heightCm: 75,
@@ -140,9 +148,21 @@ const SAMPLE_TANKS: Product[] = [
 ];
 
 export default function TanksPage() {
+  const [tanks, setTanks] = useState<Product[]>(SAMPLE_TANKS);
   const [filter, setFilter] = useState<'all' | 'curved' | 'low-iron' | 'buy' | 'inquire'>('all');
 
-  const filteredTanks = SAMPLE_TANKS.filter((t) => {
+  useEffect(() => {
+    client
+      .fetch(tanksQuery)
+      .then((data) => {
+        if (data && data.length > 0) {
+          setTanks(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const filteredTanks = tanks.filter((t) => {
     if (filter === 'all') return true;
     if (filter === 'curved') return t.shape?.toLowerCase().includes('curved');
     if (filter === 'low-iron') return t.glassType?.toLowerCase().includes('low-iron');
@@ -155,7 +175,7 @@ export default function TanksPage() {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <SiteHeader />
 
-      <main className="flex-1 py-12 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto w-full">
+      <main className="flex-1 pt-24 sm:pt-28 pb-12 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto w-full">
         {/* Page Title & Breadcrumbs */}
         <div className="mb-8">
           <span className="text-xs font-bold tracking-widest uppercase text-primary">
