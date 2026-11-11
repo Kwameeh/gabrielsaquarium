@@ -1,0 +1,212 @@
+'use client';
+
+import React, { useState } from 'react';
+import { SiteHeader } from '@/components/header/SiteHeader';
+import { Footer } from '@/components/home/Footer';
+import { CartDrawer } from '@/components/cart/CartDrawer';
+import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
+import { ProductCard } from '@/components/products/ProductCard';
+import type { Product } from '@/lib/types';
+import { ShieldCheck } from 'lucide-react';
+
+const SAMPLE_FISH: Product[] = [
+  {
+    _id: 'fish-discus-blue',
+    _type: 'fish',
+    title: 'Cobalt Blue Discus Specimen',
+    slug: 'cobalt-blue-discus',
+    price: 320,
+    purchaseType: 'buy',
+    soldAs: 'each',
+    image: 'https://images.unsplash.com/photo-1520315342629-6ea920342047?q=80&w=800&auto=format&fit=crop',
+    waterType: 'Freshwater',
+    careLevel: 'Moderate',
+    temperament: 'Peaceful',
+    diet: 'Carnivore',
+    adultSizeCm: 15,
+    sizeSold: '6 to 7 cm',
+    minTankLitres: 200,
+    waterConditions: '28 to 30 °C, pH 6.0 to 7.0',
+    compatibility: 'Peaceful community fish. Best kept in groups of 5+ with peaceful tetras.',
+  },
+  {
+    _id: 'fish-clownfish-pair',
+    _type: 'fish',
+    title: 'Ocellaris Clownfish Pair (True Percula)',
+    slug: 'ocellaris-clownfish-pair',
+    price: 450,
+    purchaseType: 'buy',
+    soldAs: 'per pair',
+    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop',
+    waterType: 'Marine',
+    careLevel: 'Easy',
+    temperament: 'Peaceful',
+    diet: 'Omnivore',
+    adultSizeCm: 9,
+    sizeSold: '3 to 4 cm',
+    minTankLitres: 80,
+    reefSafe: 'Yes',
+    waterConditions: '24 to 26 °C, Salinity 1.025, pH 8.1 to 8.4',
+    compatibility: 'Reef safe. Highly compatible with anemones, soft corals, and peaceful reef fish.',
+  },
+  {
+    _id: 'fish-lake-malawi-cichlid',
+    _type: 'fish',
+    title: 'Electric Yellow Labidochromis Cichlid',
+    slug: 'electric-yellow-cichlid',
+    price: 85,
+    purchaseType: 'buy',
+    soldAs: 'each',
+    image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop',
+    waterType: 'Freshwater',
+    careLevel: 'Easy',
+    temperament: 'Semi-aggressive',
+    diet: 'Omnivore',
+    adultSizeCm: 10,
+    sizeSold: '4 to 5 cm',
+    minTankLitres: 120,
+    waterConditions: '24 to 27 °C, pH 7.8 to 8.6',
+    compatibility: 'Keep with other Lake Malawi mbuna cichlids. Provide rock caves.',
+  },
+  {
+    _id: 'fish-flame-angelfish',
+    _type: 'fish',
+    title: 'Flame Angelfish (Centropyge loricula)',
+    slug: 'flame-angelfish',
+    price: 680,
+    purchaseType: 'buy',
+    soldAs: 'each',
+    image: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=800&auto=format&fit=crop',
+    waterType: 'Marine',
+    careLevel: 'Moderate',
+    temperament: 'Semi-aggressive',
+    diet: 'Omnivore',
+    adultSizeCm: 10,
+    sizeSold: '5 to 6 cm',
+    minTankLitres: 150,
+    reefSafe: 'With caution',
+    waterConditions: '24 to 26 °C, Salinity 1.024, pH 8.2',
+    compatibility: 'Vivid centerpiece fish for mature marine systems.',
+  },
+  {
+    _id: 'fish-neon-tetra-school',
+    _type: 'fish',
+    title: 'Cardinal Tetras (Paracheirodon axelrodi)',
+    slug: 'cardinal-tetras-school',
+    price: 90,
+    purchaseType: 'buy',
+    soldAs: 'group of 6',
+    image: 'https://images.unsplash.com/photo-1576836165612-8bc9b07e7778?q=80&w=800&auto=format&fit=crop',
+    waterType: 'Freshwater',
+    careLevel: 'Easy',
+    temperament: 'Peaceful',
+    diet: 'Omnivore',
+    adultSizeCm: 4,
+    sizeSold: '2 cm',
+    minTankLitres: 50,
+    waterConditions: '24 to 28 °C, pH 6.0 to 7.0',
+    compatibility: 'Schooling fish. Peaceful with dwarf shrimp, rasboras, and planted tanks.',
+  },
+  {
+    _id: 'fish-yellow-tang',
+    _type: 'fish',
+    title: 'Hawaiian Yellow Tang (Zebrasoma flavescens)',
+    slug: 'hawaiian-yellow-tang',
+    price: 1200,
+    purchaseType: 'buy',
+    soldAs: 'each',
+    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop',
+    waterType: 'Marine',
+    careLevel: 'Moderate',
+    temperament: 'Semi-aggressive',
+    diet: 'Herbivore',
+    adultSizeCm: 20,
+    sizeSold: '6 to 8 cm',
+    minTankLitres: 300,
+    reefSafe: 'Yes',
+    waterConditions: '24 to 26 °C, Salinity 1.025, pH 8.2',
+    compatibility: 'Reef safe. Great grazer for hair algae in established marine aquariums.',
+  },
+];
+
+export default function FishPage() {
+  const [filter, setFilter] = useState<'all' | 'freshwater' | 'marine' | 'easy'>('all');
+
+  const filteredFish = SAMPLE_FISH.filter((f) => {
+    if (filter === 'all') return true;
+    if (filter === 'freshwater') return f.waterType === 'Freshwater';
+    if (filter === 'marine') return f.waterType === 'Marine';
+    if (filter === 'easy') return f.careLevel === 'Easy';
+    return true;
+  });
+
+  return (
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <SiteHeader />
+
+      <main className="flex-1 py-12 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto w-full">
+        {/* Page Title */}
+        <div className="mb-8">
+          <span className="text-xs font-bold tracking-widest uppercase text-primary">
+            Quarantined Live Stock
+          </span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mt-1 font-heading">
+            Live Freshwater &amp; Marine Fish
+          </h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-2 max-w-2xl">
+            Every specimen is quarantined for minimum 14 days, acclimated to local conditions, and delivered in pure oxygen transit bags backed by our Live Arrival Guarantee.
+          </p>
+        </div>
+
+        {/* Filters */}
+        <div className="flex flex-wrap gap-2 mb-10 pb-4 border-b border-border/50">
+          {(
+            [
+              { id: 'all', label: 'All Fish' },
+              { id: 'freshwater', label: 'Freshwater Species' },
+              { id: 'marine', label: 'Marine & Reef Fish' },
+              { id: 'easy', label: 'Easy Care' },
+            ] as const
+          ).map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setFilter(tab.id)}
+              className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
+                filter === tab.id
+                  ? 'bg-primary text-primary-foreground shadow-xs'
+                  : 'bg-card border border-border text-foreground hover:bg-muted'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Fish Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredFish.map((fish) => (
+            <ProductCard key={fish._id} product={fish} />
+          ))}
+        </div>
+
+        {/* Policy note banner */}
+        <div className="mt-16 p-6 rounded-3xl bg-secondary/40 border border-border flex items-start gap-4">
+          <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+            <ShieldCheck className="w-5 h-5" />
+          </div>
+          <div className="text-xs text-muted-foreground leading-relaxed">
+            <strong className="text-foreground block text-sm font-semibold mb-0.5">
+              Gabriel&apos;s Live Arrival Health Policy
+            </strong>
+            All live fish orders are packed with oxygen tablets and delivered promptly. In the rare event of transit mortality, notify us with a clear photo in the WhatsApp chat within 2 hours of arrival for an immediate replacement or store credit.
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+      <CartDrawer />
+      <FloatingWhatsApp />
+    </div>
+  );
+}

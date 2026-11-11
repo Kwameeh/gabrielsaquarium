@@ -1,0 +1,98 @@
+import { defineField, defineType } from 'sanity';
+import {
+  descriptionField,
+  featuredField,
+  imagesField,
+  inStockField,
+  priceField,
+  productGroups,
+  slugField,
+  titleField,
+} from './productFields';
+
+export const fish = defineType({
+  name: 'fish',
+  title: 'Fish',
+  type: 'document',
+  groups: productGroups,
+  fields: [
+    titleField('Common name'),
+    slugField,
+    priceField,
+    defineField({
+      name: 'soldAs',
+      title: 'Sold as',
+      type: 'string',
+      group: 'basics',
+      initialValue: 'each',
+      description: 'Shown after the price: "each", "per pair", "per group of 6"',
+    }),
+    inStockField('Available now'),
+    imagesField,
+    descriptionField,
+    featuredField,
+
+    // Specs
+    defineField({ name: 'scientificName', title: 'Scientific name', type: 'string', group: 'specs' }),
+    defineField({
+      name: 'waterType',
+      title: 'Water type',
+      type: 'string',
+      group: 'specs',
+      options: { list: ['Freshwater', 'Marine', 'Brackish'], layout: 'radio' },
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'careLevel',
+      title: 'Care level',
+      type: 'string',
+      group: 'specs',
+      options: { list: ['Easy', 'Moderate', 'Advanced'], layout: 'radio' },
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'temperament',
+      type: 'string',
+      group: 'specs',
+      options: { list: ['Peaceful', 'Semi-aggressive', 'Aggressive'], layout: 'radio' },
+    }),
+    defineField({
+      name: 'diet',
+      type: 'string',
+      group: 'specs',
+      options: { list: ['Omnivore', 'Carnivore', 'Herbivore'], layout: 'radio' },
+    }),
+    defineField({ name: 'adultSizeCm', title: 'Adult size (cm)', type: 'number', group: 'specs' }),
+    defineField({
+      name: 'sizeSold',
+      title: 'Size you sell at',
+      type: 'string',
+      group: 'specs',
+      description: 'e.g. "3 to 4 cm"',
+    }),
+    defineField({ name: 'minTankLitres', title: 'Minimum tank size (litres)', type: 'number', group: 'specs' }),
+    defineField({
+      name: 'waterConditions',
+      title: 'Water conditions',
+      type: 'string',
+      group: 'specs',
+      description: 'e.g. "24 to 28 °C, pH 6.5 to 7.5"',
+    }),
+    defineField({
+      name: 'compatibility',
+      type: 'text',
+      rows: 3,
+      group: 'specs',
+      description: 'Tank mates and group size, e.g. "Peaceful. Keep in groups of 6 or more. Avoid fin nippers."',
+    }),
+    defineField({
+      name: 'reefSafe',
+      title: 'Reef safe',
+      type: 'string',
+      group: 'specs',
+      options: { list: ['Yes', 'With caution', 'No'], layout: 'radio' },
+      hidden: (context) => (context.document as Record<string, unknown> | undefined)?.waterType !== 'Marine',
+    }),
+  ],
+  preview: { select: { title: 'title', subtitle: 'waterType', media: 'images.0' } },
+});
