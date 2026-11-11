@@ -53,61 +53,86 @@
 :root {
   --radius: 0.75rem;
 
-  --background: oklch(0.986 0.007 248);        /* #F7FBFF */
-  --foreground: oklch(0.231 0.085 260);        /* #031A44 deep navy */
+  --background: oklch(0.986 0.007 248);
+  /* #F7FBFF */
+  --foreground: oklch(0.231 0.085 260);
+  /* #031A44 deep navy */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.231 0.085 260);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.231 0.085 260);
 
-  --primary: oklch(0.504 0.164 255);           /* #0762BF royal blue */
+  --primary: oklch(0.504 0.164 255);
+  /* #0762BF royal blue */
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.951 0.021 241);         /* #E3F1FC */
+  --secondary: oklch(0.951 0.021 241);
+  /* #E3F1FC */
   --secondary-foreground: oklch(0.259 0.098 260);
-  --muted: oklch(0.957 0.014 248);             /* #EAF2FA */
-  --muted-foreground: oklch(0.482 0.059 254);  /* #47607F */
-  --accent: oklch(0.933 0.031 234);            /* #D6EDFB */
+  --muted: oklch(0.957 0.014 248);
+  /* #EAF2FA */
+  --muted-foreground: oklch(0.482 0.059 254);
+  /* #47607F */
+  --accent: oklch(0.933 0.031 234);
+  /* #D6EDFB */
   --accent-foreground: oklch(0.259 0.098 260);
 
-  --destructive: oklch(0.576 0.209 29);        /* #D92D20 */
-  --border: oklch(0.906 0.028 248);            /* #D2E2F2 */
+  --destructive: oklch(0.576 0.209 29);
+  /* #D92D20 */
+  --border: oklch(0.906 0.028 248);
+  /* #D2E2F2 */
   --input: oklch(0.906 0.028 248);
-  --ring: oklch(0.741 0.157 235);              /* #00B9FF cyan */
+  --ring: oklch(0.741 0.157 235);
+  /* #00B9FF cyan */
 
-  --highlight: oklch(0.821 0.16 82);           /* #F8B828 amber */
+  --highlight: oklch(0.821 0.16 82);
+  /* #F8B828 amber */
   --highlight-foreground: oklch(0.231 0.085 260);
-  --success: oklch(0.521 0.159 139);           /* #2F7D0A */
+  --success: oklch(0.521 0.159 139);
+  /* #2F7D0A */
   --success-foreground: oklch(1 0 0);
-  --whatsapp: oklch(0.524 0.092 180);          /* #0F7B6C */
+  --whatsapp: oklch(0.524 0.092 180);
+  /* #0F7B6C */
   --whatsapp-foreground: oklch(1 0 0);
 
-  --chart-1: oklch(0.504 0.164 255);           /* royal blue */
-  --chart-2: oklch(0.741 0.157 235);           /* cyan */
-  --chart-3: oklch(0.821 0.16 82);             /* amber */
-  --chart-4: oklch(0.521 0.159 139);           /* green */
-  --chart-5: oklch(0.259 0.098 260);           /* navy */
+  --chart-1: oklch(0.504 0.164 255);
+  /* royal blue */
+  --chart-2: oklch(0.741 0.157 235);
+  /* cyan */
+  --chart-3: oklch(0.821 0.16 82);
+  /* amber */
+  --chart-4: oklch(0.521 0.159 139);
+  /* green */
+  --chart-5: oklch(0.259 0.098 260);
+  /* navy */
 }
 
 /* "Lit tank at night" - flips tokens automatically inside .dark */
 .dark {
-  --background: oklch(0.177 0.061 260);        /* #020F2B */
+  --background: oklch(0.177 0.061 260);
+  /* #020F2B */
   --foreground: oklch(0.986 0.007 248);
-  --card: oklch(0.262 0.09 259);               /* #05224F */
+  --card: oklch(0.262 0.09 259);
+  /* #05224F */
   --card-foreground: oklch(0.986 0.007 248);
   --popover: oklch(0.262 0.09 259);
   --popover-foreground: oklch(0.986 0.007 248);
 
-  --primary: oklch(0.741 0.157 235);           /* cyan button on navy */
+  --primary: oklch(0.741 0.157 235);
+  /* cyan button on navy */
   --primary-foreground: oklch(0.231 0.085 260);
-  --secondary: oklch(0.314 0.107 260);         /* #0A2E66 */
+  --secondary: oklch(0.314 0.107 260);
+  /* #0A2E66 */
   --secondary-foreground: oklch(0.986 0.007 248);
   --muted: oklch(0.314 0.107 260);
-  --muted-foreground: oklch(0.768 0.054 255);  /* #9DB6D6 */
-  --accent: oklch(0.36 0.119 258);             /* #0D3A7A */
+  --muted-foreground: oklch(0.768 0.054 255);
+  /* #9DB6D6 */
+  --accent: oklch(0.36 0.119 258);
+  /* #0D3A7A */
   --accent-foreground: oklch(0.986 0.007 248);
 
   --destructive: oklch(0.65 0.2 25);
-  --border: oklch(0.381 0.116 259);            /* #17407F */
+  --border: oklch(0.381 0.116 259);
+  /* #17407F */
   --input: oklch(0.381 0.116 259);
   --ring: oklch(0.741 0.157 235);
 
@@ -123,22 +148,34 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
   }
 }
 
 @keyframes marquee-left {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 @keyframes marquee-right {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(-50%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .animate-marquee-left {
