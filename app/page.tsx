@@ -1,4 +1,5 @@
 import AquariumHero from '@/components/hero/AquariumHero';
+import { AnnouncementBar } from '@/components/header/AnnouncementBar';
 import { TrustStrip } from '@/components/home/TrustStrip';
 import { CategoryTiles } from '@/components/home/CategoryTiles';
 import { FeaturedTanks } from '@/components/home/FeaturedTanks';
@@ -16,6 +17,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-highlight selection:text-highlight-foreground">
+      {/* 0. Top Announcement Bar */}
+      <AnnouncementBar />
+
       {/* 1. 3D Radial Hero & Floating Pill Header */}
       <AquariumHero whatsappNumber={whatsappNumber} />
 

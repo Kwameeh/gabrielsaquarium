@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ArrowUpRight, MapPin } from 'lucide-react';
 
 interface ProjectItem {
@@ -120,22 +121,24 @@ export function OurWorkShowcase() {
 
             <div className="p-6 flex-1 flex flex-col justify-between">
               <div>
-                <h3 className="font-bold text-foreground text-base group-hover:text-primary transition-colors font-heading">
-                  {proj.title}
-                </h3>
+                <Link href={`/our-work/${proj.id}`}>
+                  <h3 className="font-bold text-foreground text-base group-hover:text-primary transition-colors font-heading">
+                    {proj.title}
+                  </h3>
+                </Link>
                 <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
                   {proj.description}
                 </p>
               </div>
 
               <div className="mt-5 pt-4 border-t border-border/50 flex items-center justify-between">
-                <a
-                  href="#custom"
+                <Link
+                  href={`/our-work/${proj.id}`}
                   className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
                 >
-                  Want something similar?
+                  View build details
                   <ArrowUpRight className="w-3.5 h-3.5" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>
