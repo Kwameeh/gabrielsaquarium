@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useSyncExternalStore } from 'react';
+import Link from 'next/link';
 import { Search, ShoppingBag, MessageCircle, Menu, X } from 'lucide-react';
 import { useCart } from '@/lib/cart';
 import { waLink } from '@/lib/whatsapp';
@@ -31,12 +32,12 @@ export function AquariumNavbar({
     : 0;
 
   const navLinks = [
-    { label: 'TANKS', href: '#tanks' },
-    { label: 'FISH', href: '#fish' },
-    { label: 'SUPPLIES', href: '#supplies' },
-    { label: 'CUSTOM', href: '#custom' },
-    { label: 'OUR WORK', href: '#our-work' },
-    { label: 'MAINTENANCE', href: '#maintenance' },
+    { label: 'TANKS', href: '/tanks' },
+    { label: 'FISH', href: '/fish' },
+    { label: 'SUPPLIES', href: '/supplies' },
+    { label: 'CUSTOM', href: '/custom-tanks' },
+    { label: 'OUR WORK', href: '/our-work' },
+    { label: 'MAINTENANCE', href: '/maintenance' },
   ];
 
   const whatsappUrl = waLink(
@@ -49,8 +50,8 @@ export function AquariumNavbar({
       <header className="fixed top-0 left-0 right-0 w-full z-50 flex items-center justify-between px-4 sm:px-8 lg:px-12 py-5 sm:py-6 pointer-events-auto">
         {/* Left side: Gabriel's Aquarium Logo & Search button */}
         <div className="flex items-center">
-          <a
-            href="#home"
+          <Link
+            href="/"
             className="text-xl sm:text-2xl font-bold tracking-tight text-[#031A44] select-none group flex items-baseline"
             aria-label="Gabriel's Aquarium Home"
           >
@@ -58,7 +59,7 @@ export function AquariumNavbar({
             <span className="text-[11px] sm:text-xs font-semibold tracking-wider text-[#0762BF] uppercase ml-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
               Aquarium
             </span>
-          </a>
+          </Link>
 
           {/* Search icon button 16-24px to the right of logo */}
           <button
@@ -79,13 +80,13 @@ export function AquariumNavbar({
             aria-label="Main Navigation"
           >
             {navLinks.map((item) => (
-              <a
+              <Link
                 key={item.label}
                 href={item.href}
                 className="text-[11px] tracking-[0.08em] font-medium text-[#031A44] hover:text-[#0762BF] hover:opacity-80 transition-all uppercase whitespace-nowrap"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -141,7 +142,7 @@ export function AquariumNavbar({
           >
             <nav className="flex flex-col gap-3">
               {navLinks.map((item) => (
-                <a
+                <Link
                   key={item.label}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
@@ -149,7 +150,7 @@ export function AquariumNavbar({
                 >
                   <span>{item.label}</span>
                   <span className="text-muted-foreground text-xs">→</span>
-                </a>
+                </Link>
               ))}
               <a
                 href={whatsappUrl}
