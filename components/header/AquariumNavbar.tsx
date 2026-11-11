@@ -110,13 +110,7 @@ export function AquariumNavbar({
             aria-label={`${businessName} Home`}
           >
             {logoUrl ? (
-              <div
-                className={`relative h-9 sm:h-11 w-32 sm:w-40 transition-all ${
-                  !isScrolled
-                    ? 'px-2.5 py-1 rounded-xl bg-white/90 backdrop-blur-md shadow-xs border border-white/30'
-                    : ''
-                }`}
-              >
+              <div className="relative h-9 sm:h-11 w-32 sm:w-40 transition-all bg-transparent">
                 <Image
                   src={logoUrl}
                   alt={businessName}
