@@ -20,6 +20,8 @@ import {
   tanksQuery,
   projectsQuery,
   fishQuery,
+  suppliesQuery,
+  plansQuery,
   testimonialsQuery,
   homeFaqsQuery,
 } from '@/lib/queries';
@@ -70,6 +72,8 @@ export default async function Home() {
     tanks,
     projects,
     fishList,
+    suppliesList,
+    plansList,
     testimonials,
     faqs,
   ] = await Promise.all([
@@ -79,6 +83,8 @@ export default async function Home() {
     client.fetch(tanksQuery).catch(() => []),
     client.fetch(projectsQuery).catch(() => []),
     client.fetch(fishQuery).catch(() => []),
+    client.fetch(suppliesQuery).catch(() => []),
+    client.fetch(plansQuery).catch(() => []),
     client.fetch(testimonialsQuery).catch(() => []),
     client.fetch(homeFaqsQuery).catch(() => []),
   ]);
@@ -140,11 +146,18 @@ export default async function Home() {
       />
 
       {/* 7. Maintenance Plans Section (Dark Mode Section) */}
-      <MaintenanceSection whatsappNumber={whatsappNumber} />
+      <MaintenanceSection
+        whatsappNumber={whatsappNumber}
+        sanityPlans={plansList?.length > 0 ? plansList : undefined}
+      />
 
       {/* 8. Fish & Supplies Highlights */}
       <FishSuppliesSection
-        sanityProducts={fishList?.length > 0 ? fishList : undefined}
+        sanityProducts={
+          (fishList?.length > 0 || suppliesList?.length > 0)
+            ? [...(fishList || []), ...(suppliesList || [])]
+            : undefined
+        }
       />
 
       {/* 9. Testimonials & FAQs */}

@@ -31,7 +31,7 @@ export default function AboutPage() {
           <div className="relative aspect-4/3 rounded-3xl overflow-hidden border border-border shadow-md">
             <Image
               src="/images/project-01-living-room-feature-tank-main.jpg"
-              alt="Gabriel's Aquarium Workshop at American House, East Legon"
+              alt="Gabriel's Aquarium Workshop"
               fill
               className="object-cover"
             />
@@ -42,7 +42,7 @@ export default function AboutPage() {
               Craftsmanship Without Compromise
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              Based at American House, East Legon, Accra, our specialized workshop brings together glass artisans, biological filtrations experts, and passionate aquarists. We believe that an aquarium should be more than a tank—it is a living, breathing architectural centerpiece that transforms living and working spaces.
+              Based in Ghana, our specialized workshop brings together glass artisans, biological filtrations experts, and passionate aquarists. We believe that an aquarium should be more than a tank—it is a living, breathing architectural centerpiece that transforms living and working spaces.
             </p>
 
             <div className="space-y-3 pt-2">

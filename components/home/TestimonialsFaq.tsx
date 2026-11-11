@@ -18,7 +18,7 @@ const TESTIMONIALS = [
   },
   {
     name: 'Kojo Bempong',
-    role: 'Aquarist & Hobbyist, East Legon',
+    role: 'Aquarist & Hobbyist, Ghana',
     quote:
       'The healthiest discus and African cichlids I have found in Ghana. Gabriel knows his water chemistry and always provides honest advice.',
   },
@@ -42,8 +42,8 @@ const FAQS = [
     a: 'A standard visit includes thorough interior/exterior glass scrubbing, 25-30% RO water change, gravel vacuuming, filter media rinse/replacement, chemical parameter testing (pH, Ammonia, Nitrite, Nitrate), and a health check for all fish.',
   },
   {
-    q: 'Where is Gabriel’s Aquarium located?',
-    a: 'Our central showroom and glass workshop are located at American House, East Legon, Accra, with daily delivery and installation teams operating across Greater Accra and nationwide.',
+    q: 'How does delivery and service work across Ghana?',
+    a: 'We operate daily delivery and white-glove installation teams across Greater Accra and nationwide throughout Ghana. Direct pickup and workshop appointments can be coordinated directly with our team on WhatsApp.',
   },
 ];
 

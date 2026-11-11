@@ -23,15 +23,15 @@ export const metadata: Metadata = {
     template: "%s | Gabriel's Aquarium",
   },
   description:
-    "Ghana's premier aquarium specialist. Handcrafted curved-glass tanks, custom living reef installations, healthy live fish, premium feeds, and professional aquarium maintenance at American House, East Legon & Greater Accra.",
+    "Ghana's premier aquarium specialist. Handcrafted curved-glass tanks, custom living reef installations, healthy live fish, premium feeds, and professional aquarium maintenance delivered and installed across Ghana.",
   keywords: [
     "aquarium Ghana",
     "curved glass fish tanks Accra",
-    "custom aquarium builder East Legon Accra",
+    "custom aquarium builder Ghana",
     "buy live fish Ghana",
     "discus fish Accra",
     "marine reef tanks Ghana",
-    "aquarium maintenance service",
+    "aquarium maintenance service Ghana",
   ],
   authors: [{ name: "Gabriel's Aquarium" }],
   creator: "Gabriel's Aquarium",

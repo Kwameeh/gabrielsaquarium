@@ -236,7 +236,7 @@ export function CartDrawer({ whatsappNumber = '233241234567' }: CartDrawerProps)
                           onChange={() => setMethod('pickup')}
                           className="accent-[#0762BF]"
                         />
-                        Shop Pickup (Kasoa)
+                        Local Pickup (Direct)
                       </label>
                     </div>
 

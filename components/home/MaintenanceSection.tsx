@@ -4,11 +4,17 @@ import React from 'react';
 import { Check, MessageCircle } from 'lucide-react';
 import { maintenanceMessage, waLink } from '@/lib/whatsapp';
 
-export function MaintenanceSection({ whatsappNumber = '233241234567' }: { whatsappNumber?: string }) {
+export function MaintenanceSection({
+  whatsappNumber = '233249384800',
+  sanityPlans,
+}: {
+  whatsappNumber?: string;
+  sanityPlans?: any[];
+}) {
   const plans = [
     {
       name: 'Essential Care',
-      price: 'From GHS 350 / visit',
+      price: 'From GHS 300 / visit',
       features: [
         'Water test & chemical balance (pH, Ammonia, Nitrite, Nitrate)',
         '25-30% RO water change and substrate vacuuming',
@@ -18,8 +24,8 @@ export function MaintenanceSection({ whatsappNumber = '233241234567' }: { whatsa
       highlighted: false,
     },
     {
-      name: 'Premium Aquarist',
-      price: 'From GHS 650 / visit',
+      name: 'Complete Care',
+      price: 'From GHS 600 / visit',
       features: [
         'All Essential Care features included',
         'Coral dipping, plant pruning, and aquascaping refresh',
@@ -30,8 +36,8 @@ export function MaintenanceSection({ whatsappNumber = '233241234567' }: { whatsa
       highlighted: true,
     },
     {
-      name: 'Commercial & Corporate',
-      price: 'Custom Monthly Contract',
+      name: 'Executive Concierge',
+      price: 'From GHS 1,200 / visit',
       features: [
         'Weekly scheduled morning/evening maintenance',
         'Full stock replenishment & automatic feeder servicing',
@@ -42,11 +48,21 @@ export function MaintenanceSection({ whatsappNumber = '233241234567' }: { whatsa
     },
   ];
 
+  const displayPlans =
+    sanityPlans && sanityPlans.length > 0
+      ? sanityPlans.map((p) => ({
+          name: p.name,
+          price: p.priceNote || 'Contact for Pricing',
+          features: p.features || [],
+          highlighted: !!p.highlighted,
+        }))
+      : plans;
+
   const handleBook = (planName: string) => {
     const text = maintenanceMessage({
       name: 'Website Visitor',
       phone: 'Via WhatsApp',
-      location: 'East Legon / Greater Accra',
+      location: 'Ghana (Specify on WhatsApp)',
       tanks: '1 tank',
       plan: planName,
     });
@@ -69,7 +85,7 @@ export function MaintenanceSection({ whatsappNumber = '233241234567' }: { whatsa
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-          {plans.map((plan) => (
+          {displayPlans.map((plan) => (
             <div
               key={plan.name}
               className={`rounded-3xl p-7 flex flex-col justify-between border transition-all ${
@@ -91,7 +107,7 @@ export function MaintenanceSection({ whatsappNumber = '233241234567' }: { whatsa
                 <p className="text-sm font-semibold text-primary mt-1">{plan.price}</p>
 
                 <ul className="mt-6 space-y-3">
-                  {plan.features.map((feature) => (
+                  {plan.features.map((feature: string) => (
                     <li key={feature} className="flex items-start gap-2.5 text-xs text-foreground/80 leading-relaxed">
                       <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                       <span>{feature}</span>

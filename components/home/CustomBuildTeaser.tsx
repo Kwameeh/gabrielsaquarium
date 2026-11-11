@@ -26,7 +26,7 @@ export function CustomBuildTeaser({ whatsappNumber = '233241234567' }: { whatsap
     const text = customTankMessage({
       name,
       phone,
-      location: location || 'Accra / Kasoa',
+      location: location || 'Ghana',
       clientType,
       size: size || undefined,
       idea,
@@ -48,7 +48,7 @@ export function CustomBuildTeaser({ whatsappNumber = '233241234567' }: { whatsap
                 Turn Any Wall into a Living Coral or Freshwater Oasis
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground mt-4 leading-relaxed max-w-xl">
-                Whether you envision a sleek room-divider in an East Legon penthouse, a serene freshwater nature tank in your living room, or a statement marine aquarium in a restaurant lobby, our artisans build it to perfection.
+                Whether you envision a sleek room-divider in a luxury penthouse, a serene freshwater nature tank in your living room, or a statement marine aquarium in a restaurant lobby, our artisans build it to perfection.
               </p>
             </div>
 
@@ -79,7 +79,7 @@ export function CustomBuildTeaser({ whatsappNumber = '233241234567' }: { whatsap
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-70" />
               <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-foreground/90">
-                <span className="font-semibold">Recent Custom Living Wall Build · Kasoa, Ghana</span>
+                <span className="font-semibold">Recent Custom Living Wall Build</span>
                 <span className="text-primary font-mono text-[11px]">480 Litres</span>
               </div>
             </div>
@@ -132,7 +132,7 @@ export function CustomBuildTeaser({ whatsappNumber = '233241234567' }: { whatsap
                       type="text"
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
-                      placeholder="e.g. Kasoa, Accra"
+                      placeholder="Your area or landmark"
                       className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-border bg-background focus:outline-none focus:ring-1 focus:ring-primary"
                     />
                   </div>

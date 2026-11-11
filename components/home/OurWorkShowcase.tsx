@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight, MapPin } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { urlFor } from '@/sanity/lib/image';
 
 interface ProjectItem {
@@ -111,7 +111,7 @@ export function OurWorkShowcase({ sanityProjects }: OurWorkShowcaseProps = {}) {
           </h2>
         </div>
         <p className="text-xs sm:text-sm text-muted-foreground max-w-md">
-          Explore our real installations in residences, executive suites, and luxury venues throughout Kasoa, Accra, and nationwide.
+          Explore our real installations in residences, executive suites, and luxury venues across Ghana.
         </p>
       </div>
 
@@ -136,12 +136,8 @@ export function OurWorkShowcase({ sanityProjects }: OurWorkShowcaseProps = {}) {
                 </span>
               </div>
 
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs">
-                <span className="flex items-center gap-1 opacity-90 text-[11px]">
-                  <MapPin className="w-3.5 h-3.5 text-[#F8B828]" />
-                  {proj.location}
-                </span>
-                <span className="font-mono text-[11px] font-semibold">
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-end text-white text-xs">
+                <span className="font-mono text-[11px] font-semibold bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-full">
                   {proj.tankSize}
                 </span>
               </div>

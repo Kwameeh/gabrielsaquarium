@@ -5,7 +5,7 @@ import { SiteHeader } from '@/components/header/SiteHeader';
 import { Footer } from '@/components/home/Footer';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
-import { Phone, Mail, MapPin, Clock, MessageCircle, Send } from 'lucide-react';
+import { Phone, Mail, Clock, MessageCircle, Send } from 'lucide-react';
 import { waLink } from '@/lib/whatsapp';
 
 export default function ContactPage() {
@@ -48,16 +48,6 @@ export default function ContactPage() {
           {/* Contact Details */}
           <div className="lg:col-span-5 space-y-6">
             <div className="p-6 rounded-3xl border border-border bg-card space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-secondary text-primary flex items-center justify-center shrink-0">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-foreground">Showroom &amp; Workshop</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">American House, East Legon, Accra, Ghana</p>
-                </div>
-              </div>
-
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 rounded-2xl bg-secondary text-primary flex items-center justify-center shrink-0">
                   <Phone className="w-5 h-5" />

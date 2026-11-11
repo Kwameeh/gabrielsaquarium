@@ -6,8 +6,11 @@ import { SiteHeader } from '@/components/header/SiteHeader';
 import { Footer } from '@/components/home/Footer';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
-import { ArrowLeft, MapPin, Building, Ruler, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Building, Ruler, MessageCircle } from 'lucide-react';
 import { waLink } from '@/lib/whatsapp';
+import { client } from '@/sanity/lib/client';
+import { projectQuery, projectsQuery, settingsQuery } from '@/lib/queries';
+import { urlFor } from '@/sanity/lib/image';
 
 interface ProjectDetail {
   slug: string;
@@ -42,7 +45,7 @@ const PROJECTS_DATA: ProjectDetail[] = [
       '/images/project-04-hotel-lobby-curved-tank-detail.jpg',
     ],
     description:
-      'A centerpiece installation custom-built for a modern residential living room in East Legon. The seamless curved glass corners provide a continuous panoramic viewing angle, eliminating bulky silicone lines on the front face.',
+      'A centerpiece installation custom-built for a modern residential living room. The seamless curved glass corners provide a continuous panoramic viewing angle, eliminating bulky silicone lines on the front face.',
     highlights: [
       'Dual-curve seamless front corners eliminating blind spots',
       'Integrated water top-off reservoir to counter evaporation',
@@ -163,10 +166,15 @@ const PROJECTS_DATA: ProjectDetail[] = [
   },
 ];
 
-export function generateStaticParams() {
-  return PROJECTS_DATA.map((p) => ({
-    slug: p.slug,
-  }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const sanityProjects = await client.fetch(projectsQuery).catch(() => []);
+  const allSlugs = new Set([
+    ...PROJECTS_DATA.map((p) => p.slug),
+    ...(sanityProjects || []).filter((p: any) => p.slug).map((p: any) => p.slug),
+  ]);
+  return Array.from(allSlugs).map((slug) => ({ slug }));
 }
 
 export default async function ProjectDetailPage({
@@ -175,13 +183,46 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const project = PROJECTS_DATA.find((p) => p.slug === slug);
+  const [sanityProject, settings] = await Promise.all([
+    client.fetch(projectQuery, { slug }).catch(() => null),
+    client.fetch(settingsQuery).catch(() => null),
+  ]);
 
-  if (!project) {
+  const fallback = PROJECTS_DATA.find((p) => p.slug === slug);
+  if (!sanityProject && !fallback) {
     notFound();
   }
 
-  const whatsappNumber = '233241234567';
+  const project: ProjectDetail = sanityProject
+    ? {
+        slug: sanityProject.slug?.current || sanityProject.slug || slug,
+        title: sanityProject.title,
+        location: sanityProject.location || 'Ghana',
+        clientType: sanityProject.clientType || 'Custom Project',
+        tankSize: sanityProject.tankSize || fallback?.tankSize || 'Custom Size',
+        volume: fallback?.volume || 'Engineered Volume',
+        filtration: fallback?.filtration || 'High-Flow Biological Filtration',
+        glass: fallback?.glass || 'Ultra-Clear Low-Iron Glass',
+        lighting: fallback?.lighting || 'Full Spectrum LED System',
+        image:
+          sanityProject.images && sanityProject.images[0]
+            ? urlFor(sanityProject.images[0]).width(1400).url()
+            : fallback?.image || '/images/project-01-living-room-feature-tank-main.jpg',
+        gallery:
+          sanityProject.images && sanityProject.images.length > 0
+            ? sanityProject.images.map((img: any) => urlFor(img).width(1200).url())
+            : fallback?.gallery || ['/images/project-01-living-room-feature-tank-main.jpg'],
+        description: sanityProject.summary || fallback?.description || 'Custom aquarium installation engineered by Gabriel\'s Aquarium.',
+        highlights: fallback?.highlights || [
+          'High-transmission low-iron glass for distortion-free viewing',
+          'Precision-engineered biological filtration setup',
+          'Automated lighting and water circulation ecosystem',
+          'Safe on-site installation and comprehensive water balancing',
+        ],
+      }
+    : fallback!;
+
+  const whatsappNumber = settings?.whatsappNumber || '233249384800';
   const whatsappUrl = waLink(
     whatsappNumber,
     `Hello Gabriel's Aquarium, I saw your project "${project.title}" (${project.tankSize}) and I want something similar for my space.`
@@ -189,7 +230,11 @@ export default async function ProjectDetailPage({
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <SiteHeader />
+      <SiteHeader
+        whatsappNumber={whatsappNumber}
+        logo={settings?.logo}
+        businessName={settings?.businessName}
+      />
 
       <main className="flex-1 py-12 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto w-full">
         {/* Back Link */}
@@ -208,10 +253,6 @@ export default async function ProjectDetailPage({
           <div className="flex flex-wrap items-center gap-3 mb-2">
             <span className="px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-secondary text-primary">
               {project.clientType}
-            </span>
-            <span className="flex items-center gap-1 text-xs text-muted-foreground">
-              <MapPin className="w-3.5 h-3.5 text-[#F8B828]" />
-              {project.location}
             </span>
           </div>
 
@@ -324,9 +365,9 @@ export default async function ProjectDetailPage({
         </div>
       </main>
 
-      <Footer />
-      <CartDrawer />
-      <FloatingWhatsApp />
+      <Footer whatsappNumber={whatsappNumber} settings={settings} />
+      <CartDrawer whatsappNumber={whatsappNumber} />
+      <FloatingWhatsApp number={whatsappNumber} />
     </div>
   );
 }

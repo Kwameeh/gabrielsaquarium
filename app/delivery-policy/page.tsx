@@ -33,9 +33,9 @@ export default function DeliveryPolicyPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-base font-bold text-foreground">3. Shop Pickup at American House</h2>
+            <h2 className="text-base font-bold text-foreground">3. Direct Workshop Pickup</h2>
             <p>
-              Customers choosing &ldquo;Pickup&rdquo; can collect their items from our American House, East Legon showroom &amp; workshop. Our staff will assist with careful packaging and vehicle loading.
+              Customers choosing &ldquo;Pickup&rdquo; can coordinate direct collection with our team upon placing an order. Our staff will assist with careful packaging and vehicle loading.
             </p>
           </section>
         </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Phone, Mail, MapPin, Clock, MessageCircle } from 'lucide-react';
+import { Phone, Mail, Clock, MessageCircle } from 'lucide-react';
 import { waLink } from '@/lib/whatsapp';
 import { urlFor } from '@/sanity/lib/image';
 
@@ -100,9 +100,6 @@ export function Footer({
             <p className="text-xs text-muted-foreground leading-relaxed">
               Ghana&apos;s premier specialist in handcrafted curved glass aquariums, living coral reefs, exotic freshwater &amp; marine fish, and professional aquarium maintenance.
             </p>
-            <div className="pt-2 text-xs text-foreground/80 font-medium">
-              Workshop &amp; Showroom: {displayAddress}
-            </div>
           </div>
 
           {/* Column 2: Quick Navigation */}
@@ -155,10 +152,6 @@ export function Footer({
               Contact &amp; Hours
             </h4>
             <ul className="space-y-3 text-xs text-muted-foreground">
-              <li className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                <span>{displayAddress}</span>
-              </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-primary shrink-0" />
                 <span>{displayPhone}</span>

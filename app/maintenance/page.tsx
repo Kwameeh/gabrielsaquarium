@@ -6,7 +6,15 @@ import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
 import { MaintenanceSection } from '@/components/home/MaintenanceSection';
 import { Droplet, ShieldCheck, HeartHandshake, Sparkles } from 'lucide-react';
 
-export default function MaintenancePage() {
+import { client } from '@/sanity/lib/client';
+import { plansQuery, settingsQuery } from '@/lib/queries';
+
+export default async function MaintenancePage() {
+  const [plans, settings] = await Promise.all([
+    client.fetch(plansQuery).catch(() => []),
+    client.fetch(settingsQuery).catch(() => null),
+  ]);
+  const whatsappNumber = settings?.whatsappNumber || '233249384800';
   const benefits = [
     {
       icon: Droplet,
@@ -63,12 +71,12 @@ export default function MaintenancePage() {
         </section>
 
         {/* Plans and Booking */}
-        <MaintenanceSection />
+        <MaintenanceSection sanityPlans={plans} whatsappNumber={whatsappNumber} />
       </main>
 
-      <Footer />
-      <CartDrawer />
-      <FloatingWhatsApp />
+      <Footer whatsappNumber={whatsappNumber} settings={settings} />
+      <CartDrawer whatsappNumber={whatsappNumber} />
+      <FloatingWhatsApp number={whatsappNumber} />
     </div>
   );
 }

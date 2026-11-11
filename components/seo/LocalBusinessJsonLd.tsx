@@ -12,16 +12,9 @@ export function LocalBusinessJsonLd() {
     priceRange: 'GHS 85 - GHS 15,000',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'American House',
-      addressLocality: 'East Legon, Accra',
-      addressRegion: 'Greater Accra',
       addressCountry: 'GH',
     },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: 5.6366,
-      longitude: -0.1557,
-    },
+    areaServed: 'Ghana',
     openingHoursSpecification: [
       {
         '@type': 'OpeningHoursSpecification',

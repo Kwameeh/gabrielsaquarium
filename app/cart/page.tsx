@@ -242,7 +242,7 @@ export default function CartPage() {
                           onChange={() => setMethod('pickup')}
                           className="accent-[#0762BF]"
                         />
-                        <span>Pickup (American House, East Legon)</span>
+                        <span>Local Pickup (Direct)</span>
                       </label>
                     </div>
                   </div>
@@ -255,7 +255,7 @@ export default function CartPage() {
                       <input
                         type="text"
                         required
-                        placeholder="Street, area, or landmark in Accra"
+                        placeholder="Street, area, or landmark"
                         value={address}
                         onChange={(e) => {
                           setAddress(e.target.value);

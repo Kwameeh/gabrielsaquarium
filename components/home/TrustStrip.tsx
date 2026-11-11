@@ -21,7 +21,7 @@ export function TrustStrip() {
     {
       icon: Truck,
       title: 'Safe Delivery in Ghana',
-      desc: 'Specialized aquatic transit with oxygen packaging across Greater Accra, Kasoa & beyond.',
+      desc: 'Specialized aquatic transit with oxygen packaging safely delivered across Ghana.',
     },
   ];
 

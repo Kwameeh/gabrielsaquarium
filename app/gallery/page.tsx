@@ -13,7 +13,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "Aquarium Gallery & Video Vault | Gabriel's Aquarium Ghana",
-  description: "Browse custom glass aquariums, living reef installations, and exotic fish at American House, East Legon, Accra, Ghana.",
+  description: "Browse custom glass aquariums, living reef installations, and exotic fish crafted and serviced across Ghana.",
 };
 
 export const revalidate = 60; // Fresh content every 60s when edited in Sanity Studio

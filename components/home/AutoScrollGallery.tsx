@@ -224,7 +224,7 @@ export function AutoScrollGallery({
               Life at Gabriel&apos;s Aquarium
             </h2>
             <p className="text-xs sm:text-sm text-white/70 max-w-xl mt-2 leading-relaxed">
-              Real custom tanks, thriving reef biotopes, exotic fish species, and precision builds across East Legon, Accra, and nationwide.
+              Real custom tanks, thriving reef biotopes, exotic fish species, and precision builds delivered and installed across Ghana.
             </p>
           </div>
 
@@ -273,16 +273,11 @@ export function AutoScrollGallery({
                 )}
               </div>
 
-              {/* Title & Location at bottom */}
+              {/* Title at bottom */}
               <div className="absolute bottom-3 left-3 right-3 text-white">
                 <h3 className="text-xs sm:text-sm font-semibold truncate group-hover:text-[#00B9FF] transition-colors">
                   {item.title}
                 </h3>
-                {item.location && (
-                  <p className="text-[10px] text-white/60 truncate mt-0.5 font-mono">
-                    {item.location}
-                  </p>
-                )}
               </div>
             </div>
           ))}
@@ -324,16 +319,11 @@ export function AutoScrollGallery({
                 )}
               </div>
 
-              {/* Title & Location at bottom */}
+              {/* Title at bottom */}
               <div className="absolute bottom-3 left-3 right-3 text-white">
                 <h3 className="text-xs sm:text-sm font-semibold truncate group-hover:text-[#00B9FF] transition-colors">
                   {item.title}
                 </h3>
-                {item.location && (
-                  <p className="text-[10px] text-white/60 truncate mt-0.5 font-mono">
-                    {item.location}
-                  </p>
-                )}
               </div>
             </div>
           ))}
@@ -386,11 +376,6 @@ export function AutoScrollGallery({
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-white/10 text-[#00B9FF]">
                     {activeItem.category}
                   </span>
-                  {activeItem.location && (
-                    <span className="text-[11px] text-white/60 font-mono">
-                      · {activeItem.location}
-                    </span>
-                  )}
                 </div>
 
                 <h3 className="text-xl sm:text-2xl font-bold font-heading">

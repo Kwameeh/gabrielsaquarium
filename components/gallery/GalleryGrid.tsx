@@ -233,18 +233,13 @@ export function GalleryGrid({
               </div>
 
               {/* Bottom Details Overlay */}
-              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs">
-                {item.location && (
-                  <span className="text-[11px] opacity-90 truncate">
-                    📍 {item.location}
-                  </span>
-                )}
-                {item.tankSize && (
-                  <span className="text-[10px] font-mono opacity-80 ml-auto pl-2">
+              {item.tankSize && (
+                <div className="absolute bottom-3 right-3 text-white text-xs">
+                  <span className="text-[10px] font-mono opacity-80 bg-black/40 backdrop-blur-sm px-2 py-0.5 rounded-full">
                     {item.tankSize}
                   </span>
-                )}
-              </div>
+                </div>
+              )}
             </div>
 
             {/* Text Information */}
@@ -313,11 +308,6 @@ export function GalleryGrid({
                   <span className="px-3 py-1 rounded-full bg-primary/10 text-primary font-semibold uppercase tracking-wider text-[10px]">
                     {selectedItem.category.replace('-', ' ')}
                   </span>
-                  {selectedItem.location && (
-                    <span className="text-muted-foreground font-mono text-[11px]">
-                      · {selectedItem.location}
-                    </span>
-                  )}
                   {selectedItem.tankSize && (
                     <span className="text-muted-foreground font-mono text-[11px]">
                       · {selectedItem.tankSize}
