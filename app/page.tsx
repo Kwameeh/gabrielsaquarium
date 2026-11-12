@@ -12,7 +12,7 @@ import { TestimonialsFaq } from '@/components/home/TestimonialsFaq';
 import { Footer } from '@/components/home/Footer';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
-import { client } from '@/sanity/lib/client';
+import { sanityFetch } from '@/sanity/lib/live';
 import {
   settingsQuery,
   heroGalleryQuery,
@@ -28,8 +28,6 @@ import {
 import { AQUARIUM_GALLERY_ITEMS } from '@/components/hero/aquariumGalleryData';
 import { GalleryItemData } from '@/components/hero/types';
 import { urlFor } from '@/sanity/lib/image';
-
-export const revalidate = 60; // Revalidate at most every 60 seconds so Sanity Studio edits show up automatically
 
 function buildHeroGalleryItems(sanityHeroItems: any[]): GalleryItemData[] {
   if (!sanityHeroItems || sanityHeroItems.length === 0) {
@@ -66,37 +64,39 @@ function buildHeroGalleryItems(sanityHeroItems: any[]): GalleryItemData[] {
 
 export default async function Home() {
   const [
-    settings,
-    heroItems,
-    galleryItems,
-    tanks,
-    projects,
-    fishList,
-    suppliesList,
-    plansList,
-    testimonials,
-    faqs,
+    { data: settings },
+    { data: heroItems },
+    { data: galleryItems },
+    { data: tanks },
+    { data: projects },
+    { data: fishList },
+    { data: suppliesList },
+    { data: plansList },
+    { data: testimonials },
+    { data: faqs },
   ] = await Promise.all([
-    client.fetch(settingsQuery).catch(() => null),
-    client.fetch(heroGalleryQuery).catch(() => []),
-    client.fetch(homeGalleryQuery).catch(() => []),
-    client.fetch(tanksQuery).catch(() => []),
-    client.fetch(projectsQuery).catch(() => []),
-    client.fetch(fishQuery).catch(() => []),
-    client.fetch(suppliesQuery).catch(() => []),
-    client.fetch(plansQuery).catch(() => []),
-    client.fetch(testimonialsQuery).catch(() => []),
-    client.fetch(homeFaqsQuery).catch(() => []),
+    sanityFetch({ query: settingsQuery }).catch(() => ({ data: null })),
+    sanityFetch({ query: heroGalleryQuery }).catch(() => ({ data: [] })),
+    sanityFetch({ query: homeGalleryQuery }).catch(() => ({ data: [] })),
+    sanityFetch({ query: tanksQuery }).catch(() => ({ data: [] })),
+    sanityFetch({ query: projectsQuery }).catch(() => ({ data: [] })),
+    sanityFetch({ query: fishQuery }).catch(() => ({ data: [] })),
+    sanityFetch({ query: suppliesQuery }).catch(() => ({ data: [] })),
+    sanityFetch({ query: plansQuery }).catch(() => ({ data: [] })),
+    sanityFetch({ query: testimonialsQuery }).catch(() => ({ data: [] })),
+    sanityFetch({ query: homeFaqsQuery }).catch(() => ({ data: [] })),
   ]);
 
   const whatsappNumber = settings?.whatsappNumber || '233249384800';
-  const heroGallery = buildHeroGalleryItems(heroItems);
+  const heroGallery = buildHeroGalleryItems(heroItems || []);
 
   const heroVideoItem = heroItems?.find((item: any) => item.mediaType === 'video');
+  const candidateVideoUrl = heroVideoItem?.videoFileUrl || heroVideoItem?.videoUrl;
+  // Use optimized local video (2.1MB with faststart) instead of the 45.7MB uncompressed CDN file
   const heroVideoUrl =
-    heroVideoItem?.videoFileUrl ||
-    heroVideoItem?.videoUrl ||
-    'https://cdn.sanity.io/files/iicegrrv/production/51558fa95dd82f9f28eedabc19fe690aaf58381c.mp4';
+    candidateVideoUrl && !candidateVideoUrl.includes('51558fa95dd82f9f28eedabc19fe690aaf58381c')
+      ? candidateVideoUrl
+      : '/videos/aquarium-showcase.mp4';
 
   return (
     <main className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-highlight selection:text-highlight-foreground">
@@ -117,38 +117,61 @@ export default async function Home() {
         logo={settings?.logo}
         businessName={settings?.businessName}
         videoUrl={heroVideoUrl}
+        settings={settings}
       />
 
       {/* 2. Trust Strip */}
-      <TrustStrip />
+      <TrustStrip badges={settings?.trustBadges} />
 
       {/* 3. Category Tiles */}
-      <CategoryTiles />
+      <CategoryTiles
+        badge={settings?.categoriesBadge}
+        heading={settings?.categoriesHeading}
+        subtitle={settings?.categoriesSubtitle}
+      />
 
       {/* 4. Featured Tanks */}
       <FeaturedTanks
         whatsappNumber={whatsappNumber}
-        sanityTanks={tanks?.length > 0 ? tanks : undefined}
+        sanityTanks={tanks && tanks.length > 0 ? tanks : undefined}
+        badge={settings?.featuredTanksBadge}
+        heading={settings?.featuredTanksHeading}
+        subtitle={settings?.featuredTanksSubtitle}
       />
 
       {/* 5. Custom Build Teaser (Dark Mode Section) */}
-      <CustomBuildTeaser whatsappNumber={whatsappNumber} />
+      <CustomBuildTeaser
+        whatsappNumber={whatsappNumber}
+        badge={settings?.customBuildBadge}
+        heading={settings?.customBuildHeading}
+        description={settings?.customBuildDescription}
+        steps={settings?.customBuildSteps}
+      />
 
       {/* 6. Our Work Showcase Gallery */}
       <OurWorkShowcase
-        sanityProjects={projects?.length > 0 ? projects : undefined}
+        sanityProjects={projects && projects.length > 0 ? projects : undefined}
+        badge={settings?.ourWorkBadge}
+        heading={settings?.ourWorkHeading}
+        subtitle={settings?.ourWorkSubtitle}
       />
 
       {/* 6.5. Auto-Scrolling Motion Gallery (Videos & Images) */}
       <AutoScrollGallery
         whatsappNumber={whatsappNumber}
-        sanityItems={galleryItems?.length > 0 ? galleryItems : undefined}
+        sanityItems={galleryItems && galleryItems.length > 0 ? galleryItems : undefined}
+        badge={settings?.galleryBadge}
+        heading={settings?.galleryHeading}
+        subtitle={settings?.gallerySubtitle}
       />
 
       {/* 7. Maintenance Plans Section (Dark Mode Section) */}
       <MaintenanceSection
         whatsappNumber={whatsappNumber}
-        sanityPlans={plansList?.length > 0 ? plansList : undefined}
+        sanityPlans={plansList && plansList.length > 0 ? plansList : undefined}
+        badge={settings?.maintenanceBadge}
+        heading={settings?.maintenanceHeading}
+        subtitle={settings?.maintenanceSubtitle}
       />
 
       {/* 8. Fish & Supplies Highlights */}
@@ -158,12 +181,19 @@ export default async function Home() {
             ? [...(fishList || []), ...(suppliesList || [])]
             : undefined
         }
+        badge={settings?.fishSuppliesBadge}
+        heading={settings?.fishSuppliesHeading}
+        subtitle={settings?.fishSuppliesSubtitle}
       />
 
       {/* 9. Testimonials & FAQs */}
       <TestimonialsFaq
-        sanityTestimonials={testimonials?.length > 0 ? testimonials : undefined}
-        sanityFaqs={faqs?.length > 0 ? faqs : undefined}
+        sanityTestimonials={testimonials && testimonials.length > 0 ? testimonials : undefined}
+        sanityFaqs={faqs && faqs.length > 0 ? faqs : undefined}
+        testimonialsHeading={settings?.testimonialsHeading}
+        testimonialsSubtitle={settings?.testimonialsSubtitle}
+        faqsHeading={settings?.faqsHeading}
+        faqsSubtitle={settings?.faqsSubtitle}
       />
 
       {/* 10. Footer & Final CTA (Dark Mode Section) */}

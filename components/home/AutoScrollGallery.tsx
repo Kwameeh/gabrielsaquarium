@@ -34,7 +34,7 @@ export const DEFAULT_GALLERY_ITEMS: AutoScrollGalleryItem[] = [
     category: 'Marine Reef',
     mediaType: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?q=80&w=800&auto=format&fit=crop',
-    videoUrl: 'https://cdn.sanity.io/files/iicegrrv/production/51558fa95dd82f9f28eedabc19fe690aaf58381c.mp4',
+    videoUrl: '/videos/aquarium-showcase.mp4',
     location: 'Studio Build',
   },
   {
@@ -59,7 +59,7 @@ export const DEFAULT_GALLERY_ITEMS: AutoScrollGalleryItem[] = [
     category: 'Marine Life',
     mediaType: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=800&auto=format&fit=crop',
-    videoUrl: 'https://cdn.sanity.io/files/iicegrrv/production/51558fa95dd82f9f28eedabc19fe690aaf58381c.mp4',
+    videoUrl: '/videos/aquarium-showcase.mp4',
     location: 'Showroom Tank',
   },
   {
@@ -102,7 +102,7 @@ export const DEFAULT_GALLERY_ITEMS: AutoScrollGalleryItem[] = [
     category: 'Marine Life',
     mediaType: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop',
-    videoUrl: 'https://cdn.sanity.io/files/iicegrrv/production/51558fa95dd82f9f28eedabc19fe690aaf58381c.mp4',
+    videoUrl: '/videos/aquarium-showcase.mp4',
     location: 'Reef Showcase',
   },
   {
@@ -135,7 +135,7 @@ export const DEFAULT_GALLERY_ITEMS: AutoScrollGalleryItem[] = [
     category: 'Filtration',
     mediaType: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?q=80&w=800&auto=format&fit=crop',
-    videoUrl: 'https://cdn.sanity.io/files/iicegrrv/production/51558fa95dd82f9f28eedabc19fe690aaf58381c.mp4',
+    videoUrl: '/videos/aquarium-showcase.mp4',
     location: 'Engineered Systems',
   },
   {
@@ -160,12 +160,18 @@ interface AutoScrollGalleryProps {
   items?: AutoScrollGalleryItem[];
   sanityItems?: any[];
   whatsappNumber?: string;
+  badge?: string;
+  heading?: string;
+  subtitle?: string;
 }
 
 export function AutoScrollGallery({
   items,
   sanityItems,
   whatsappNumber = '233249384800',
+  badge = 'Living Aquatic Gallery',
+  heading = "Life at Gabriel's Aquarium",
+  subtitle = 'Real custom tanks, thriving reef biotopes, exotic fish species, and precision builds delivered and installed across Ghana.',
 }: AutoScrollGalleryProps) {
   const [activeItem, setActiveItem] = useState<AutoScrollGalleryItem | null>(null);
 
@@ -218,13 +224,13 @@ export function AutoScrollGallery({
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px] font-mono tracking-wider uppercase text-[#00B9FF] mb-3">
               <Sparkles className="w-3.5 h-3.5 text-[#F8B828]" />
-              Living Aquatic Gallery
+              {badge}
             </div>
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white font-heading">
-              Life at Gabriel&apos;s Aquarium
+              {heading}
             </h2>
             <p className="text-xs sm:text-sm text-white/70 max-w-xl mt-2 leading-relaxed">
-              Real custom tanks, thriving reef biotopes, exotic fish species, and precision builds delivered and installed across Ghana.
+              {subtitle}
             </p>
           </div>
 

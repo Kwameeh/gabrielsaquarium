@@ -73,9 +73,17 @@ const PROJECTS: ProjectItem[] = [
 
 interface OurWorkShowcaseProps {
   sanityProjects?: any[];
+  badge?: string;
+  heading?: string;
+  subtitle?: string;
 }
 
-export function OurWorkShowcase({ sanityProjects }: OurWorkShowcaseProps = {}) {
+export function OurWorkShowcase({
+  sanityProjects,
+  badge = 'Proven Installations',
+  heading = 'Our Work Across Ghana',
+  subtitle = 'Explore our real installations in residences, executive suites, and luxury venues across Ghana.',
+}: OurWorkShowcaseProps = {}) {
   const displayProjects: ProjectItem[] =
     sanityProjects && sanityProjects.length > 0
       ? sanityProjects.map((p, idx) => {
@@ -104,14 +112,14 @@ export function OurWorkShowcase({ sanityProjects }: OurWorkShowcaseProps = {}) {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
         <div>
           <span className="text-xs font-bold tracking-widest uppercase text-primary">
-            Proven Installations
+            {badge}
           </span>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground mt-1 font-heading">
-            Our Work Across Ghana
+            {heading}
           </h2>
         </div>
         <p className="text-xs sm:text-sm text-muted-foreground max-w-md">
-          Explore our real installations in residences, executive suites, and luxury venues across Ghana.
+          {subtitle}
         </p>
       </div>
 

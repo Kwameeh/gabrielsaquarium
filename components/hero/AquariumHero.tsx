@@ -13,6 +13,7 @@ interface AquariumHeroProps {
   logo?: any;
   businessName?: string;
   videoUrl?: string;
+  settings?: any;
 }
 
 export function AquariumHero({
@@ -20,7 +21,8 @@ export function AquariumHero({
   galleryItems,
   logo,
   businessName = "Gabriel's Aquarium",
-  videoUrl = 'https://cdn.sanity.io/files/iicegrrv/production/51558fa95dd82f9f28eedabc19fe690aaf58381c.mp4',
+  videoUrl = '/videos/aquarium-showcase.mp4',
+  settings,
 }: AquariumHeroProps) {
   return (
     <section
@@ -36,6 +38,7 @@ export function AquariumHero({
           loop
           muted
           playsInline
+          preload="auto"
           className="w-full h-full object-cover scale-105 filter saturate-[1.2] brightness-[0.75]"
         />
         {/* Cinematic Vignette & Readability Gradients */}
@@ -50,14 +53,23 @@ export function AquariumHero({
         businessName={businessName}
       />
 
-      {/* 2. 3D Radial Z-Axis Floating Gallery (z-index: 10 & 30 dynamically) */}
-      <AquariumRadialGallery items={galleryItems} />
+      {/* 2. 3D Radial Z-Axis Floating Gallery (commented out per request) */}
+      {/* <AquariumRadialGallery items={galleryItems} /> */}
 
       {/* 3. Centerpiece Hero Headline & Actions (z-index: 20) */}
-      <AquariumHeroHeadline />
+      <AquariumHeroHeadline
+        badge={settings?.heroBadge}
+        headline={settings?.heroHeadline}
+        subheadline={settings?.heroSubheadline}
+        primaryCta={settings?.heroCtaPrimary}
+        secondaryCta={settings?.heroCtaSecondary}
+      />
 
       {/* 4. Bottom-Left Floating Guarantee Badge (z-index: 40) */}
-      <AquariumFloatingBadge />
+      <AquariumFloatingBadge
+        title={settings?.heroGuaranteeTitle}
+        subtitle={settings?.heroGuaranteeText}
+      />
     </section>
   );
 }

@@ -8,7 +8,7 @@ import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
 import { ArrowLeft, Building, Ruler, MessageCircle } from 'lucide-react';
 import { waLink } from '@/lib/whatsapp';
-import { client } from '@/sanity/lib/client';
+import { sanityFetch } from '@/sanity/lib/live';
 import { projectQuery, projectsQuery, settingsQuery } from '@/lib/queries';
 import { urlFor } from '@/sanity/lib/image';
 
@@ -169,7 +169,7 @@ const PROJECTS_DATA: ProjectDetail[] = [
 export const revalidate = 60;
 
 export async function generateStaticParams() {
-  const sanityProjects = await client.fetch(projectsQuery).catch(() => []);
+  const { data: sanityProjects } = await sanityFetch({ query: projectsQuery, perspective: 'published', stega: false }).catch(() => ({ data: [] }));
   const allSlugs = new Set([
     ...PROJECTS_DATA.map((p) => p.slug),
     ...(sanityProjects || []).filter((p: any) => p.slug).map((p: any) => p.slug),
@@ -183,9 +183,12 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [sanityProject, settings] = await Promise.all([
-    client.fetch(projectQuery, { slug }).catch(() => null),
-    client.fetch(settingsQuery).catch(() => null),
+  const [
+    { data: sanityProject },
+    { data: settings },
+  ] = await Promise.all([
+    sanityFetch({ query: projectQuery, params: { slug } }).catch(() => ({ data: null })),
+    sanityFetch({ query: settingsQuery }).catch(() => ({ data: null })),
   ]);
 
   const fallback = PROJECTS_DATA.find((p) => p.slug === slug);

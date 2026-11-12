@@ -4,7 +4,7 @@ import { Footer } from '@/components/home/Footer';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
 import { GalleryGrid, GalleryGridItem, FALLBACK_GALLERY_DATA } from '@/components/gallery/GalleryGrid';
-import { client } from '@/sanity/lib/client';
+import { sanityFetch } from '@/sanity/lib/live';
 import { galleryQuery, settingsQuery } from '@/lib/queries';
 import { urlFor } from '@/sanity/lib/image';
 import { waLink } from '@/lib/whatsapp';
@@ -19,9 +19,12 @@ export const metadata: Metadata = {
 export const revalidate = 60; // Fresh content every 60s when edited in Sanity Studio
 
 export default async function GalleryPage() {
-  const [settings, sanityItems] = await Promise.all([
-    client.fetch(settingsQuery).catch(() => null),
-    client.fetch(galleryQuery).catch(() => []),
+  const [
+    { data: settings },
+    { data: sanityItems },
+  ] = await Promise.all([
+    sanityFetch({ query: settingsQuery }).catch(() => ({ data: null })),
+    sanityFetch({ query: galleryQuery }).catch(() => ({ data: [] })),
   ]);
 
   const whatsappNumber = settings?.whatsappNumber || '233249384800';

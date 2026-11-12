@@ -1,31 +1,31 @@
-'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import { SiteHeader } from '@/components/header/SiteHeader';
 import { Footer } from '@/components/home/Footer';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
-import { Phone, Mail, Clock, MessageCircle, Send } from 'lucide-react';
+import { ContactForm } from '@/components/contact/ContactForm';
+import { Phone, Mail, Clock, MessageCircle, MapPin } from 'lucide-react';
 import { waLink } from '@/lib/whatsapp';
+import { sanityFetch } from '@/sanity/lib/live';
+import { settingsQuery, pageQuery } from '@/lib/queries';
 
-export default function ContactPage() {
-  const whatsappNumber = '233241234567';
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [message, setMessage] = useState('');
+export default async function ContactPage() {
+  const [
+    { data: settings },
+    { data: pageData },
+  ] = await Promise.all([
+    sanityFetch({ query: settingsQuery }).catch(() => ({ data: null })),
+    sanityFetch({ query: pageQuery, params: { slug: 'contact' } }).catch(() => ({ data: null })),
+  ]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !phone || !message) return;
-    const text = [
-      "*Website Contact Inquiry*",
-      '',
-      `*Name:* ${name}`,
-      `*Phone:* ${phone}`,
-      `*Message:* ${message}`,
-    ].join('\n');
-    window.open(waLink(whatsappNumber, text), '_blank');
-  };
+  const whatsappNumber = settings?.whatsappNumber || '233249384800';
+  const displayPhone = settings?.phone || '+233 24 938 4800';
+  const displayEmail = settings?.email || 'info@gabrielsaquarium.com';
+  const displayAddress = settings?.address || 'American House, East Legon, Accra, Ghana';
+  const hours =
+    settings?.openingHours && settings.openingHours.length > 0
+      ? settings.openingHours
+      : ['Monday – Saturday: 8:00 AM – 8:00 PM', 'Sunday: Closed (Emergency Call-Outs Only)'];
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -34,13 +34,14 @@ export default function ContactPage() {
       <main className="flex-1 py-16 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto w-full">
         <div className="max-w-2xl mb-12">
           <span className="text-xs font-bold tracking-widest uppercase text-primary">
-            Get in Touch
+            {pageData?.badge || 'Get in Touch'}
           </span>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mt-2 font-heading">
-            We&apos;re Here to Help
+            {pageData?.title || "We're Here to Help"}
           </h1>
           <p className="text-sm text-muted-foreground mt-3">
-            Have a question about a tank, custom build, live fish availability, or maintenance service? Connect with Gabriel directly via WhatsApp or phone.
+            {pageData?.intro ||
+              'Have a question about a tank, custom build, live fish availability, or maintenance service? Connect with Gabriel directly via WhatsApp or phone.'}
           </p>
         </div>
 
@@ -54,7 +55,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-foreground">Phone &amp; WhatsApp</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">+233 24 123 4567</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{displayPhone}</p>
                 </div>
               </div>
 
@@ -64,7 +65,17 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-foreground">Email</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">gabrielsaquarium@gmail.com</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{displayEmail}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-2xl bg-secondary text-primary flex items-center justify-center shrink-0">
+                  <MapPin className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-foreground">Location</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">{displayAddress}</p>
                 </div>
               </div>
 
@@ -74,8 +85,9 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-foreground">Working Hours</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">Monday – Saturday: 8:00 AM – 6:00 PM</p>
-                  <p className="text-xs text-muted-foreground">Sunday: By Appointment</p>
+                  {hours.map((h: string) => (
+                    <p key={h} className="text-xs text-muted-foreground mt-0.5">{h}</p>
+                  ))}
                 </div>
               </div>
             </div>
@@ -101,66 +113,15 @@ export default function ContactPage() {
                 Fill out the quick form below and it will instantly open a pre-filled WhatsApp chat with our team.
               </p>
 
-              <form onSubmit={handleSendMessage} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                      Your Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="e.g. Kwame Mensah"
-                      className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-border bg-background focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                      Phone Number *
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="024 XXX XXXX"
-                      className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-border bg-background focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                    Your Message / Question *
-                  </label>
-                  <textarea
-                    required
-                    rows={4}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Ask about tank dimensions, fish stock, delivery to your area..."
-                    className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-border bg-background focus:outline-none focus:ring-1 focus:ring-primary"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="py-3 px-6 rounded-xl font-semibold text-xs text-white bg-primary hover:bg-primary/90 shadow-md flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99]"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>Send Message on WhatsApp</span>
-                </button>
-              </form>
+              <ContactForm whatsappNumber={whatsappNumber} />
             </div>
           </div>
         </div>
       </main>
 
-      <Footer />
-      <CartDrawer />
-      <FloatingWhatsApp />
+      <Footer whatsappNumber={whatsappNumber} settings={settings} />
+      <CartDrawer whatsappNumber={whatsappNumber} />
+      <FloatingWhatsApp number={whatsappNumber} />
     </div>
   );
 }

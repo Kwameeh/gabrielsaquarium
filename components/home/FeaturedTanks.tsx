@@ -75,11 +75,17 @@ const FEATURED_TANKS: TankItem[] = [
 interface FeaturedTanksProps {
   whatsappNumber?: string;
   sanityTanks?: Product[];
+  badge?: string;
+  heading?: string;
+  subtitle?: string;
 }
 
 export function FeaturedTanks({
   whatsappNumber = '233249384800',
   sanityTanks,
+  badge = 'Signature Craftsmanship',
+  heading = 'Ready-Made & Curved Glass Tanks',
+  subtitle = 'Seamless curved-front glass, ultra-clear low-iron sheets, and leak-free precision joints. Delivered and installed safely at your location.',
 }: FeaturedTanksProps) {
   const add = useCart((s) => s.add);
 
@@ -132,14 +138,14 @@ export function FeaturedTanks({
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-primary text-xs font-bold tracking-wider uppercase mb-2">
               <Sparkles className="w-3.5 h-3.5 text-[#F8B828]" />
-              Signature Craftsmanship
+              {badge}
             </div>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground font-heading">
-              Ready-Made &amp; Curved Glass Tanks
+              {heading}
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground max-w-md">
-            Seamless curved-front glass, ultra-clear low-iron sheets, and leak-free precision joints. Delivered and installed safely at your location.
+            {subtitle}
           </p>
         </div>
 

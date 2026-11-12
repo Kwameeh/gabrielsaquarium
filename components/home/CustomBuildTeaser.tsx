@@ -5,7 +5,34 @@ import Image from 'next/image';
 import { MessageCircle } from 'lucide-react';
 import { customTankMessage, waLink } from '@/lib/whatsapp';
 
-export function CustomBuildTeaser({ whatsappNumber = '233241234567' }: { whatsappNumber?: string }) {
+interface CustomBuildStep {
+  num?: string;
+  title: string;
+  desc: string;
+}
+
+interface CustomBuildTeaserProps {
+  whatsappNumber?: string;
+  badge?: string;
+  heading?: string;
+  description?: string;
+  steps?: CustomBuildStep[];
+}
+
+const DEFAULT_STEPS: CustomBuildStep[] = [
+  { num: '01', title: 'Share Your Space', desc: 'Tell us where you want your aquarium and send photos of the room.' },
+  { num: '02', title: 'Custom 3D CAD Design', desc: 'We tailor dimensions, filtration chambers, and cabinet finish.' },
+  { num: '03', title: 'Master Glass Crafting', desc: 'Hand-assembled with ultra-clear glass, precision silicone & plumbing.' },
+  { num: '04', title: 'White-Glove Installation', desc: 'Delivered, filled, aquascaped, and biologically established.' },
+];
+
+export function CustomBuildTeaser({
+  whatsappNumber = '233241234567',
+  badge = 'Bespoke Architectural Systems',
+  heading = 'Turn Any Wall into a Living Coral or Freshwater Oasis',
+  description = 'Whether you envision a sleek room-divider in a luxury penthouse, a serene freshwater nature tank in your living room, or a statement marine aquarium in a restaurant lobby, our artisans build it to perfection.',
+  steps,
+}: CustomBuildTeaserProps) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [location, setLocation] = useState('');
@@ -13,12 +40,7 @@ export function CustomBuildTeaser({ whatsappNumber = '233241234567' }: { whatsap
   const [size, setSize] = useState('');
   const [idea, setIdea] = useState('');
 
-  const steps = [
-    { num: '01', title: 'Share Your Space', desc: 'Tell us where you want your aquarium and send photos of the room.' },
-    { num: '02', title: 'Custom 3D CAD Design', desc: 'We tailor dimensions, filtration chambers, and cabinet finish.' },
-    { num: '03', title: 'Master Glass Crafting', desc: 'Hand-assembled with ultra-clear glass, precision silicone & plumbing.' },
-    { num: '04', title: 'White-Glove Installation', desc: 'Delivered, filled, aquascaped, and biologically established.' },
-  ];
+  const displaySteps = steps && steps.length > 0 ? steps : DEFAULT_STEPS;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,22 +64,22 @@ export function CustomBuildTeaser({ whatsappNumber = '233241234567' }: { whatsap
           <div className="lg:col-span-7 space-y-8">
             <div>
               <span className="text-xs font-bold tracking-widest uppercase text-primary">
-                Bespoke Architectural Systems
+                {badge}
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mt-2 font-heading">
-                Turn Any Wall into a Living Coral or Freshwater Oasis
+                {heading}
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground mt-4 leading-relaxed max-w-xl">
-                Whether you envision a sleek room-divider in a luxury penthouse, a serene freshwater nature tank in your living room, or a statement marine aquarium in a restaurant lobby, our artisans build it to perfection.
+                {description}
               </p>
             </div>
 
             {/* 4 Steps Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
-              {steps.map((step) => (
-                <div key={step.num} className="p-5 rounded-2xl bg-card border border-border/40">
+              {displaySteps.map((step, idx) => (
+                <div key={step.title || idx} className="p-5 rounded-2xl bg-card border border-border/40">
                   <span className="text-sm font-mono font-bold text-primary">
-                    {step.num}
+                    {step.num || `0${idx + 1}`}
                   </span>
                   <h3 className="text-base font-bold text-foreground mt-1">
                     {step.title}

@@ -5,9 +5,18 @@ import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
 import { CustomBuildTeaser } from '@/components/home/CustomBuildTeaser';
 import { Check } from 'lucide-react';
+import { sanityFetch } from '@/sanity/lib/live';
+import { pageQuery, settingsQuery } from '@/lib/queries';
 
-export default function CustomTanksPage() {
-  const customizable = [
+export default async function CustomTanksPage() {
+  const [{ data: pageData }, { data: settings }] = await Promise.all([
+    sanityFetch({ query: pageQuery, params: { slug: 'custom-tanks' } }).catch(() => ({ data: null })),
+    sanityFetch({ query: settingsQuery }).catch(() => ({ data: null })),
+  ]);
+
+  const whatsappNumber = settings?.whatsappNumber || '233249384800';
+
+  const defaultCustomizable = [
     { title: 'Dimensions & Geometry', desc: 'Any length, depth, or height up to 3 meters. Rectangular, curved bow-front, L-shape, or cube.' },
     { title: 'Glass Selection', desc: 'Standard float, ultra-clear low-iron (Starphire), tempered safety glass, or thick cast acrylic.' },
     { title: 'Filtration Systems', desc: 'Silent weir internal overflows, bean-animal plumbing, drilled returns, or built-in multi-stage sumps.' },
@@ -15,6 +24,14 @@ export default function CustomTanksPage() {
     { title: 'Automated Lighting', desc: 'App-controlled reef or planted full-spectrum LED fixtures with custom sunrise/sunset ramps.' },
     { title: 'Backgrounds & Hardscapes', desc: '3D textured slate or granite rock backgrounds, driftwood aquascaping, and living coral reefs.' },
   ];
+
+  const customizable =
+    pageData?.features && pageData.features.length > 0
+      ? pageData.features.map((f: any) => ({
+          title: f.title,
+          desc: f.description,
+        }))
+      : defaultCustomizable;
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -25,23 +42,24 @@ export default function CustomTanksPage() {
         <section className="py-20 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto">
           <div className="max-w-3xl">
             <span className="text-xs font-bold tracking-widest uppercase text-primary">
-              Bespoke Aquarium Engineering
+              {pageData?.badge || 'Bespoke Aquarium Engineering'}
             </span>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mt-2 font-heading">
-              Custom Built Aquariums &amp; Living Walls
+              {pageData?.title || 'Custom Built Aquariums & Living Walls'}
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground mt-4 leading-relaxed">
-              Every space is unique. Gabriel&apos;s Aquarium designs, manufactures, and installs bespoke luxury aquariums for private homes, corporate offices, restaurants, and hotels throughout Ghana.
+              {pageData?.intro ||
+                "Every space is unique. Gabriel's Aquarium designs, manufactures, and installs bespoke luxury aquariums for private homes, corporate offices, restaurants, and hotels throughout Ghana."}
             </p>
           </div>
 
           {/* Customization Grid */}
           <div className="mt-16">
             <h2 className="text-xl sm:text-2xl font-bold text-foreground font-heading mb-6">
-              What You Can Customize
+              {pageData?.featuresHeading || 'What You Can Customize'}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {customizable.map((c) => (
+              {customizable.map((c: any) => (
                 <div key={c.title} className="p-6 rounded-3xl border border-border bg-card">
                   <div className="w-8 h-8 rounded-full bg-secondary text-primary flex items-center justify-center mb-3">
                     <Check className="w-4 h-4" />
@@ -55,12 +73,18 @@ export default function CustomTanksPage() {
         </section>
 
         {/* Embedded Custom Build Teaser with Form */}
-        <CustomBuildTeaser />
+        <CustomBuildTeaser
+          whatsappNumber={whatsappNumber}
+          badge={settings?.customBuildBadge}
+          heading={settings?.customBuildHeading}
+          description={settings?.customBuildDescription}
+          steps={settings?.customBuildSteps}
+        />
       </main>
 
-      <Footer />
-      <CartDrawer />
-      <FloatingWhatsApp />
+      <Footer whatsappNumber={whatsappNumber} settings={settings} />
+      <CartDrawer whatsappNumber={whatsappNumber} />
+      <FloatingWhatsApp number={whatsappNumber} />
     </div>
   );
 }

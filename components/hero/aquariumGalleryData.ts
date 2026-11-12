@@ -32,7 +32,7 @@ export const AQUARIUM_GALLERY_ITEMS: GalleryItemData[] = [
     aspect: 'aspect-[3/4]',
     width: 'w-34 md:w-40',
     imageUrl: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?q=80&w=700&auto=format&fit=crop',
-    videoUrl: 'https://cdn.sanity.io/files/iicegrrv/production/51558fa95dd82f9f28eedabc19fe690aaf58381c.mp4',
+    videoUrl: '/videos/aquarium-showcase.mp4',
   },
   // 3. Image: Majestic Discus Community
   {
@@ -103,7 +103,7 @@ export const AQUARIUM_GALLERY_ITEMS: GalleryItemData[] = [
     aspect: 'aspect-[4/5]',
     width: 'w-36 md:w-42',
     imageUrl: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=700&auto=format&fit=crop',
-    videoUrl: 'https://cdn.sanity.io/files/iicegrrv/production/51558fa95dd82f9f28eedabc19fe690aaf58381c.mp4',
+    videoUrl: '/videos/aquarium-showcase.mp4',
   },
   // 8. Video: Serene Marine Life Motion
   {
@@ -118,7 +118,7 @@ export const AQUARIUM_GALLERY_ITEMS: GalleryItemData[] = [
     aspect: 'aspect-[4/5]',
     width: 'w-38 md:w-44',
     imageUrl: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?q=80&w=700&auto=format&fit=crop',
-    videoUrl: 'https://cdn.sanity.io/files/iicegrrv/production/51558fa95dd82f9f28eedabc19fe690aaf58381c.mp4',
+    videoUrl: '/videos/aquarium-showcase.mp4',
   },
   // 9. Signature Build: High-Clarity Planted Haven
   {
@@ -189,7 +189,7 @@ export const AQUARIUM_GALLERY_ITEMS: GalleryItemData[] = [
     aspect: 'aspect-[4/5]',
     width: 'w-36 md:w-42',
     imageUrl: 'https://images.unsplash.com/photo-1576836165612-8bc9b07e7778?q=80&w=700&auto=format&fit=crop',
-    videoUrl: 'https://cdn.sanity.io/files/iicegrrv/production/51558fa95dd82f9f28eedabc19fe690aaf58381c.mp4',
+    videoUrl: '/videos/aquarium-showcase.mp4',
   },
   // 14. High-Clarity Rimless Glass
   {
@@ -246,7 +246,7 @@ export const AQUARIUM_GALLERY_ITEMS: GalleryItemData[] = [
     aspect: 'aspect-[4/5]',
     width: 'w-38 md:w-44',
     imageUrl: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=700&auto=format&fit=crop',
-    videoUrl: 'https://cdn.sanity.io/files/iicegrrv/production/51558fa95dd82f9f28eedabc19fe690aaf58381c.mp4',
+    videoUrl: '/videos/aquarium-showcase.mp4',
   },
   // 18. Image: Kasoa Custom Curved Glass Side View
   {
@@ -289,7 +289,7 @@ export const AQUARIUM_GALLERY_ITEMS: GalleryItemData[] = [
     aspect: 'aspect-[4/5]',
     width: 'w-36 md:w-42',
     imageUrl: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=700&auto=format&fit=crop',
-    videoUrl: 'https://cdn.sanity.io/files/iicegrrv/production/51558fa95dd82f9f28eedabc19fe690aaf58381c.mp4',
+    videoUrl: '/videos/aquarium-showcase.mp4',
   },
   // 21. Image: In-Wall Reef Living Wall
   {
@@ -374,7 +374,7 @@ export const AQUARIUM_GALLERY_ITEMS: GalleryItemData[] = [
     aspect: 'aspect-square',
     width: 'w-34 md:w-40',
     imageUrl: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?q=80&w=700&auto=format&fit=crop',
-    videoUrl: 'https://cdn.sanity.io/files/iicegrrv/production/51558fa95dd82f9f28eedabc19fe690aaf58381c.mp4',
+    videoUrl: '/videos/aquarium-showcase.mp4',
   },
   // 27. Modern Aquascape Living Room
   {

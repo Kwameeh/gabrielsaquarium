@@ -7,4 +7,7 @@ export const client = createClient({
   dataset,
   apiVersion,
   useCdn: false, // false ensures new edits and uploaded images in Sanity Studio reflect immediately
+  stega: {
+    studioUrl: '/studio',
+  },
 })

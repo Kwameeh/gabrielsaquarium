@@ -27,6 +27,7 @@
 .DS_Store
 *.pem
 *.mp4
+!public/videos/aquarium-showcase.mp4
 
 # debug
 npm-debug.log*

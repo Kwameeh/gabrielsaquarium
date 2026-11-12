@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
+import { draftMode } from "next/headers";
 import { LocalBusinessJsonLd } from "@/components/seo/LocalBusinessJsonLd";
+import { SanityLive } from "@/sanity/lib/live";
+import { VisualEditing } from "@/components/sanity/VisualEditing";
+import { DraftModeBanner } from "@/components/sanity/DraftModeBanner";
 import "./globals.css";
 
 const inter = Inter({
@@ -74,11 +78,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { isEnabled: isDraftMode } = await draftMode();
+
   return (
     <html
       lang="en"
@@ -87,6 +93,13 @@ export default function RootLayout({
       <body className="min-h-screen bg-background text-foreground font-sans">
         <LocalBusinessJsonLd />
         {children}
+        <SanityLive />
+        {isDraftMode && (
+          <>
+            <VisualEditing />
+            <DraftModeBanner />
+          </>
+        )}
       </body>
     </html>
   );

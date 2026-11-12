@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "bun run scripts/upload-and-seed-images.ts",
-    "seed:basic": "bun run scripts/seed.ts"
+    "seed:basic": "bun run scripts/seed.ts",
+    "seed:pages": "bun run scripts/seed-pages-and-copy.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

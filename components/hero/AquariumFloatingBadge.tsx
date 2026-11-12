@@ -4,7 +4,15 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ShieldCheck } from 'lucide-react';
 
-export function AquariumFloatingBadge() {
+interface AquariumFloatingBadgeProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export function AquariumFloatingBadge({
+  title = "Gabriel's Guarantee",
+  subtitle = 'Live Fish Health & Leak-Free Tank Guarantee',
+}: AquariumFloatingBadgeProps) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -32,10 +40,10 @@ export function AquariumFloatingBadge() {
             className="absolute left-[48px] top-1/2 -translate-y-1/2 px-3 py-1.5 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-black/[0.05] whitespace-nowrap pointer-events-none"
           >
             <p className="text-[11px] font-bold text-[#031A44]">
-              Gabriel&apos;s Guarantee
+              {title}
             </p>
             <p className="text-[9px] text-[#031A44]/70">
-              Live Fish Health &amp; Leak-Free Tank Guarantee
+              {subtitle}
             </p>
           </motion.div>
         )}

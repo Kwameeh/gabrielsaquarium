@@ -50,11 +50,19 @@ const FAQS = [
 interface TestimonialsFaqProps {
   sanityTestimonials?: any[];
   sanityFaqs?: any[];
+  testimonialsHeading?: string;
+  testimonialsSubtitle?: string;
+  faqsHeading?: string;
+  faqsSubtitle?: string;
 }
 
 export function TestimonialsFaq({
   sanityTestimonials,
   sanityFaqs,
+  testimonialsHeading = 'Trusted by Homes & Businesses in Ghana',
+  testimonialsSubtitle,
+  faqsHeading = 'Frequently Asked Questions',
+  faqsSubtitle,
 }: TestimonialsFaqProps = {}) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
@@ -85,8 +93,13 @@ export function TestimonialsFaq({
               Client Feedback
             </span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground mt-1 font-heading">
-              Trusted by Homes &amp; Businesses in Ghana
+              {testimonialsHeading}
             </h2>
+            {testimonialsSubtitle && (
+              <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
+                {testimonialsSubtitle}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -125,8 +138,13 @@ export function TestimonialsFaq({
               Common Questions
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mt-1 font-heading">
-              Frequently Asked Questions
+              {faqsHeading}
             </h2>
+            {faqsSubtitle && (
+              <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed max-w-lg mx-auto">
+                {faqsSubtitle}
+              </p>
+            )}
           </div>
 
           <div className="space-y-4">

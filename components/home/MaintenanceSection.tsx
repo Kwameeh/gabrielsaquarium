@@ -4,13 +4,21 @@ import React from 'react';
 import { Check, MessageCircle } from 'lucide-react';
 import { maintenanceMessage, waLink } from '@/lib/whatsapp';
 
+interface MaintenanceSectionProps {
+  whatsappNumber?: string;
+  sanityPlans?: any[];
+  badge?: string;
+  heading?: string;
+  subtitle?: string;
+}
+
 export function MaintenanceSection({
   whatsappNumber = '233249384800',
   sanityPlans,
-}: {
-  whatsappNumber?: string;
-  sanityPlans?: any[];
-}) {
+  badge = 'Hassle-Free Aquarium Ownership',
+  heading = 'Professional Maintenance Plans',
+  subtitle = 'Never worry about cloudy water, algae spikes, or dirty filters. Our certified technicians keep your aquatic habitat crystal clear and thriving.',
+}: MaintenanceSectionProps) {
   const plans = [
     {
       name: 'Essential Care',
@@ -74,13 +82,13 @@ export function MaintenanceSection({
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="text-xs font-bold tracking-widest uppercase text-primary">
-            Hassle-Free Aquarium Ownership
+            {badge}
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mt-2 font-heading">
-            Professional Maintenance Plans
+            {heading}
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground mt-3 leading-relaxed">
-            Never worry about cloudy water, algae spikes, or dirty filters. Our certified technicians keep your aquatic habitat crystal clear and thriving.
+            {subtitle}
           </p>
         </div>
 

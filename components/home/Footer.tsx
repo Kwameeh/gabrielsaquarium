@@ -36,13 +36,14 @@ export function Footer({
         {/* Final Call to Action Banner */}
         <div className="rounded-3xl p-8 sm:p-12 bg-card border border-border/50 text-center max-w-4xl mx-auto mb-20 shadow-2xl">
           <span className="text-xs font-bold tracking-widest uppercase text-primary">
-            Start Your Aquarium Journey
+            {settings?.footerCtaBadge || 'Start Your Aquarium Journey'}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground mt-2 font-heading">
-            Ready to Build Your Dream Aquarium?
+            {settings?.footerCtaHeading || 'Ready to Build Your Dream Aquarium?'}
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground mt-3 max-w-xl mx-auto leading-relaxed">
-            Whether you need a curved glass tank, a custom in-wall coral reef, healthy live fish, or routine tank care in Ghana, Gabriel and his team are ready to assist.
+            {settings?.footerCtaSubtitle ||
+              'Whether you need a curved glass tank, a custom in-wall coral reef, healthy live fish, or routine tank care in Ghana, Gabriel and his team are ready to assist.'}
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
@@ -98,7 +99,8 @@ export function Footer({
               )}
             </Link>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Ghana&apos;s premier specialist in handcrafted curved glass aquariums, living coral reefs, exotic freshwater &amp; marine fish, and professional aquarium maintenance.
+              {settings?.footerAboutText ||
+                "Ghana's premier specialist in handcrafted curved glass aquariums, living coral reefs, exotic freshwater & marine fish, and professional aquarium maintenance."}
             </p>
           </div>
 

@@ -6,8 +6,38 @@ import { Footer } from '@/components/home/Footer';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
 import { CheckCircle2 } from 'lucide-react';
+import { sanityFetch } from '@/sanity/lib/live';
+import { pageQuery, settingsQuery } from '@/lib/queries';
+import { urlFor } from '@/sanity/lib/image';
+import { PortableText } from 'next-sanity';
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const [{ data: pageData }, { data: settings }] = await Promise.all([
+    sanityFetch({ query: pageQuery, params: { slug: 'about' } }).catch(() => ({ data: null })),
+    sanityFetch({ query: settingsQuery }).catch(() => ({ data: null })),
+  ]);
+
+  const whatsappNumber = settings?.whatsappNumber || '233249384800';
+
+  const defaultFeatures = [
+    'Every tank is leak-tested under full water load for 72 hours before dispatch.',
+    'Live fish are quarantined in dedicated biosecure systems to guarantee health.',
+    'We use only marine-safe non-toxic structural silicone and low-iron glass.',
+    'Full after-sales support and scheduled maintenance throughout Ghana.',
+  ];
+
+  const features =
+    pageData?.features && pageData.features.length > 0
+      ? pageData.features.map((f: any) => f.title || f.description || f)
+      : defaultFeatures;
+
+  let heroImg = '/images/project-01-living-room-feature-tank-main.jpg';
+  if (pageData?.heroImage) {
+    try {
+      heroImg = urlFor(pageData.heroImage).width(1200).url();
+    } catch {}
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <SiteHeader />
@@ -16,13 +46,14 @@ export default function AboutPage() {
         {/* Intro */}
         <div className="max-w-3xl mb-16">
           <span className="text-xs font-bold tracking-widest uppercase text-primary">
-            Our Story &amp; Craft
+            {pageData?.badge || 'Our Story & Craft'}
           </span>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mt-2 font-heading">
-            Dedicated to the Art of Aquatics in Ghana
+            {pageData?.title || 'Dedicated to the Art of Aquatics in Ghana'}
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground mt-4 leading-relaxed">
-            Founded with a passion for underwater ecology, Gabriel&apos;s Aquarium has grown into Ghana&apos;s premier destination for custom curved glass tanks, living coral reefs, and healthy acclimated aquatic life.
+            {pageData?.intro ||
+              "Founded with a passion for underwater ecology, Gabriel's Aquarium has grown into Ghana's premier destination for custom curved glass tanks, living coral reefs, and healthy acclimated aquatic life."}
           </p>
         </div>
 
@@ -30,8 +61,8 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
           <div className="relative aspect-4/3 rounded-3xl overflow-hidden border border-border shadow-md">
             <Image
-              src="/images/project-01-living-room-feature-tank-main.jpg"
-              alt="Gabriel's Aquarium Workshop"
+              src={heroImg}
+              alt={pageData?.title || "Gabriel's Aquarium Workshop"}
               fill
               className="object-cover"
             />
@@ -39,19 +70,20 @@ export default function AboutPage() {
 
           <div className="space-y-6">
             <h2 className="text-2xl sm:text-3xl font-bold text-foreground font-heading">
-              Craftsmanship Without Compromise
+              {pageData?.featuresHeading || 'Craftsmanship Without Compromise'}
             </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              Based in Ghana, our specialized workshop brings together glass artisans, biological filtrations experts, and passionate aquarists. We believe that an aquarium should be more than a tank—it is a living, breathing architectural centerpiece that transforms living and working spaces.
-            </p>
+            <div className="text-xs sm:text-sm text-muted-foreground leading-relaxed space-y-4">
+              {pageData?.body && pageData.body.length > 0 ? (
+                <PortableText value={pageData.body} />
+              ) : (
+                <p>
+                  Based in Ghana, our specialized workshop brings together glass artisans, biological filtration experts, and passionate aquarists. We believe that an aquarium should be more than a tank—it is a living, breathing architectural centerpiece that transforms living and working spaces.
+                </p>
+              )}
+            </div>
 
             <div className="space-y-3 pt-2">
-              {[
-                'Every tank is leak-tested under full water load for 72 hours before dispatch.',
-                'Live fish are quarantined in dedicated biosecure systems to guarantee health.',
-                'We use only marine-safe non-toxic structural silicone and low-iron glass.',
-                'Full after-sales support and scheduled maintenance throughout Ghana.',
-              ].map((item) => (
+              {features.map((item: string) => (
                 <div key={item} className="flex items-start gap-2.5 text-xs text-foreground/85">
                   <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                   <span>{item}</span>
@@ -77,9 +109,9 @@ export default function AboutPage() {
         </div>
       </main>
 
-      <Footer />
-      <CartDrawer />
-      <FloatingWhatsApp />
+      <Footer whatsappNumber={whatsappNumber} settings={settings} />
+      <CartDrawer whatsappNumber={whatsappNumber} />
+      <FloatingWhatsApp number={whatsappNumber} />
     </div>
   );
 }

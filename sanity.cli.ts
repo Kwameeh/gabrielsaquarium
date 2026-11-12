@@ -13,4 +13,12 @@ export default defineCliConfig({
   deployment: {
     appId: 'hci16c74s120tv5oc1g0gt0j',
   },
+  vite: (config) => ({
+    ...config,
+    publicDir: false, // Excludes large Next.js public assets (e.g. 44MB videos) from the Sanity Studio hosted bundle
+    define: {
+      ...config.define,
+      'process.env.SANITY_STUDIO_STANDALONE': JSON.stringify('true'),
+    },
+  }),
 })

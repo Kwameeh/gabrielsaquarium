@@ -7,8 +7,12 @@ export const structure: StructureResolver = (S) =>
     .title('Content')
     .items([
       S.listItem()
-        .title('Site Settings')
+        .title('Site Settings & Homepage Copy')
         .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
+      S.divider(),
+      S.listItem()
+        .title('Pages')
+        .child(S.documentTypeList('page').title('Pages')),
       S.divider(),
       S.listItem()
         .title('Products')
@@ -20,6 +24,6 @@ export const structure: StructureResolver = (S) =>
       S.divider(),
       S.documentTypeListItem('gallery').title('Gallery'),
       ...S.documentTypeListItems().filter(
-        (item) => !['siteSettings', 'gallery', ...productTypes].includes(item.getId() ?? '')
+        (item) => !['siteSettings', 'gallery', 'page', ...productTypes].includes(item.getId() ?? '')
       ),
     ]);

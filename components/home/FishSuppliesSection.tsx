@@ -86,9 +86,17 @@ const HIGHLIGHT_PRODUCTS: ProductItem[] = [
 
 interface FishSuppliesSectionProps {
   sanityProducts?: any[];
+  badge?: string;
+  heading?: string;
+  subtitle?: string;
 }
 
-export function FishSuppliesSection({ sanityProducts }: FishSuppliesSectionProps = {}) {
+export function FishSuppliesSection({
+  sanityProducts,
+  badge = 'Healthy Stock & Essentials',
+  heading = 'Live Fish, Feeds & Supplies',
+  subtitle,
+}: FishSuppliesSectionProps = {}) {
   const [filter, setFilter] = useState<'all' | 'fish' | 'supplies'>('all');
   const add = useCart((s) => s.add);
 
@@ -135,11 +143,16 @@ export function FishSuppliesSection({ sanityProducts }: FishSuppliesSectionProps
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div>
           <span className="text-xs font-bold tracking-widest uppercase text-primary">
-            Healthy Stock &amp; Essentials
+            {badge}
           </span>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground mt-1 font-heading">
-            Live Fish, Feeds &amp; Supplies
+            {heading}
           </h2>
+          {subtitle && (
+            <p className="text-xs sm:text-sm text-muted-foreground max-w-md mt-2">
+              {subtitle}
+            </p>
+          )}
         </div>
 
         {/* Tab Filters */}

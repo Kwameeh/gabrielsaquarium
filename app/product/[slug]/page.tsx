@@ -10,8 +10,8 @@ import { ProductSpecs } from '@/components/products/ProductSpecs';
 import { ProductActions } from '@/components/products/ProductActions';
 import { ProductCard } from '@/components/products/ProductCard';
 import { priceLabel } from '@/lib/whatsapp';
-import { client } from '@/sanity/lib/client';
-import { productQuery, relatedQuery, allProductSlugsQuery } from '@/lib/queries';
+import { sanityFetch } from '@/sanity/lib/live';
+import { productQuery, relatedQuery, allProductSlugsQuery, settingsQuery } from '@/lib/queries';
 import { urlFor } from '@/sanity/lib/image';
 import type { Product } from '@/lib/types';
 import { Truck, ShieldCheck, ArrowLeft } from 'lucide-react';
@@ -265,7 +265,11 @@ const ALL_PRODUCTS: Product[] = [
 export const revalidate = 60;
 
 export async function generateStaticParams() {
-  const sanitySlugs = await client.fetch(allProductSlugsQuery).catch(() => []);
+  const { data: sanitySlugs } = await sanityFetch({
+    query: allProductSlugsQuery,
+    perspective: 'published',
+    stega: false,
+  }).catch(() => ({ data: [] }));
   const allSlugs = new Set([
     ...ALL_PRODUCTS.map((p) => p.slug),
     ...(sanitySlugs || []).map((s: any) => s.slug),
@@ -281,18 +285,26 @@ export default async function ProductDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const sanityProduct = await client.fetch(productQuery, { slug }).catch(() => null);
+  const [
+    { data: sanityProduct },
+    { data: settings },
+  ] = await Promise.all([
+    sanityFetch({ query: productQuery, params: { slug } }).catch(() => ({ data: null })),
+    sanityFetch({ query: settingsQuery }).catch(() => ({ data: null })),
+  ]);
   const product = sanityProduct || ALL_PRODUCTS.find((p) => p.slug === slug);
 
   if (!product) {
     notFound();
   }
 
+  const whatsappNumber = settings?.whatsappNumber || '233249384800';
   const formattedPrice = priceLabel(product);
   const mainImage = resolveProductImage(product);
-  const relatedFromSanity = await client
-    .fetch(relatedQuery, { type: product._type, slug: product.slug })
-    .catch(() => []);
+  const { data: relatedFromSanity } = await sanityFetch({
+    query: relatedQuery,
+    params: { type: product._type, slug: product.slug },
+  }).catch(() => ({ data: [] }));
   const related =
     relatedFromSanity && relatedFromSanity.length > 0
       ? relatedFromSanity
@@ -401,9 +413,9 @@ export default async function ProductDetailPage({
         )}
       </main>
 
-      <Footer />
-      <CartDrawer />
-      <FloatingWhatsApp />
+      <Footer whatsappNumber={whatsappNumber} settings={settings} />
+      <CartDrawer whatsappNumber={whatsappNumber} />
+      <FloatingWhatsApp number={whatsappNumber} />
     </div>
   );
 }

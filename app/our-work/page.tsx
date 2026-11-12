@@ -4,16 +4,16 @@ import { Footer } from '@/components/home/Footer';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
 import { OurWorkShowcase } from '@/components/home/OurWorkShowcase';
-
-import { client } from '@/sanity/lib/client';
+import { sanityFetch } from '@/sanity/lib/live';
 import { projectsQuery, settingsQuery } from '@/lib/queries';
 
-export const revalidate = 60;
-
 export default async function OurWorkPage() {
-  const [projects, settings] = await Promise.all([
-    client.fetch(projectsQuery).catch(() => []),
-    client.fetch(settingsQuery).catch(() => null),
+  const [
+    { data: projects },
+    { data: settings },
+  ] = await Promise.all([
+    sanityFetch({ query: projectsQuery }).catch(() => ({ data: [] })),
+    sanityFetch({ query: settingsQuery }).catch(() => ({ data: null })),
   ]);
   const whatsappNumber = settings?.whatsappNumber || '233249384800';
 
@@ -26,7 +26,12 @@ export default async function OurWorkPage() {
       />
 
       <main className="flex-1">
-        <OurWorkShowcase sanityProjects={projects} />
+        <OurWorkShowcase
+          sanityProjects={projects}
+          badge={settings?.ourWorkBadge}
+          heading={settings?.ourWorkHeading}
+          subtitle={settings?.ourWorkSubtitle}
+        />
       </main>
 
       <Footer whatsappNumber={whatsappNumber} settings={settings} />

@@ -5,38 +5,54 @@ import { CartDrawer } from '@/components/cart/CartDrawer';
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp';
 import { MaintenanceSection } from '@/components/home/MaintenanceSection';
 import { Droplet, ShieldCheck, HeartHandshake, Sparkles } from 'lucide-react';
-
-import { client } from '@/sanity/lib/client';
-import { plansQuery, settingsQuery } from '@/lib/queries';
+import { sanityFetch } from '@/sanity/lib/live';
+import { plansQuery, settingsQuery, pageQuery } from '@/lib/queries';
 
 export default async function MaintenancePage() {
-  const [plans, settings] = await Promise.all([
-    client.fetch(plansQuery).catch(() => []),
-    client.fetch(settingsQuery).catch(() => null),
+  const [
+    { data: plans },
+    { data: settings },
+    { data: pageData },
+  ] = await Promise.all([
+    sanityFetch({ query: plansQuery }).catch(() => ({ data: [] })),
+    sanityFetch({ query: settingsQuery }).catch(() => ({ data: null })),
+    sanityFetch({ query: pageQuery, params: { slug: 'maintenance' } }).catch(() => ({ data: null })),
   ]);
+
   const whatsappNumber = settings?.whatsappNumber || '233249384800';
-  const benefits = [
+
+  const defaultBenefits = [
     {
-      icon: Droplet,
       title: 'Water Chemistry Precision',
       desc: 'Accurate testing of pH, ammonia, nitrite, nitrate, calcium, and alkalinity to prevent fish distress.',
     },
     {
-      icon: Sparkles,
       title: 'Crystal Clear Glass & Substrate',
       desc: 'Deep algae scraping and gravel vacuuming to maintain pristine aesthetics without scratching the glass.',
     },
     {
-      icon: HeartHandshake,
       title: 'Preventive Fish Healthcare',
       desc: 'Visual disease inspections and nutritional assessments to ensure optimal vitality and longevity.',
     },
     {
-      icon: ShieldCheck,
       title: 'Equipment Health Audits',
       desc: 'Impeller lubrication, filter media cleansing, heater calibration, and leak inspection every visit.',
     },
   ];
+
+  const benefitIcons = [Droplet, Sparkles, HeartHandshake, ShieldCheck];
+
+  const benefits =
+    pageData?.features && pageData.features.length > 0
+      ? pageData.features.map((f: any, idx: number) => ({
+          icon: benefitIcons[idx % benefitIcons.length],
+          title: f.title,
+          desc: f.description,
+        }))
+      : defaultBenefits.map((b, idx) => ({
+          icon: benefitIcons[idx % benefitIcons.length],
+          ...b,
+        }));
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -47,18 +63,19 @@ export default async function MaintenancePage() {
         <section className="py-20 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto">
           <div className="max-w-3xl">
             <span className="text-xs font-bold tracking-widest uppercase text-primary">
-              Certified Technicians
+              {pageData?.badge || 'Certified Technicians'}
             </span>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mt-2 font-heading">
-              Professional Aquarium Maintenance
+              {pageData?.title || 'Professional Aquarium Maintenance'}
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground mt-4 leading-relaxed">
-              We provide scheduled routine care and emergency servicing for residential and commercial aquariums across Greater Accra and surrounding areas. Enjoy the tranquility of a flourishing aquarium while we handle the work.
+              {pageData?.intro ||
+                'We provide scheduled routine care and emergency servicing for residential and commercial aquariums across Greater Accra and surrounding areas. Enjoy the tranquility of a flourishing aquarium while we handle the work.'}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
-            {benefits.map((b) => (
+            {benefits.map((b: any) => (
               <div key={b.title} className="p-6 rounded-3xl border border-border bg-card">
                 <div className="w-10 h-10 rounded-2xl bg-secondary text-primary flex items-center justify-center mb-4">
                   <b.icon className="w-5 h-5" />
@@ -71,7 +88,13 @@ export default async function MaintenancePage() {
         </section>
 
         {/* Plans and Booking */}
-        <MaintenanceSection sanityPlans={plans} whatsappNumber={whatsappNumber} />
+        <MaintenanceSection
+          sanityPlans={plans}
+          whatsappNumber={whatsappNumber}
+          badge={settings?.maintenanceBadge}
+          heading={settings?.maintenanceHeading}
+          subtitle={settings?.maintenanceSubtitle}
+        />
       </main>
 
       <Footer whatsappNumber={whatsappNumber} settings={settings} />
